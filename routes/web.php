@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\PaymentTypeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,4 +33,12 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+});
+
+Route::name('paymentTypes.')->prefix('payment-types')->group(function () {
+    Route::get('/', [PaymentTypeController::class, 'index'])->name('index');
+    Route::get('/{id}', [PaymentTypeController::class, 'show'])->name('show');
+    Route::patch('/{id}', [PaymentTypeController::class, 'update'])->name('update');
+    Route::post('/', [PaymentTypeController::class, 'store'])->name('store');
+    Route::delete('/{id}', [PaymentTypeController::class, 'destroy'])->name('destroy');
 });
