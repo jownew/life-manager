@@ -25,7 +25,7 @@ const props = defineProps({
                                 <div class="table-cell text-left border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400"></div>
                                 <div class="table-cell text-left">Date</div>
                                 <div class="table-cell text-left">Name</div>
-                                <div class="table-cell text-right">Amount</div>
+                                <div class="table-cell text-right px-5">Amount</div>
                             </div>
                         </div>
                         <div class="md:table-row-group">
@@ -43,7 +43,7 @@ const props = defineProps({
                                 <div class="md:table-cell hidden md:visible">
                                     {{ item.name }}
                                 </div>
-                                <div class="md:table-cell hidden md:visible text-right">
+                                <div class="md:table-cell hidden md:visible text-right px-5">
                                     {{ item.amount.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}) }}
                                 </div>
                             </div>
