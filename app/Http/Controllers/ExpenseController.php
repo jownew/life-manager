@@ -5,17 +5,20 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreExpenseRequest;
 use App\Http\Requests\UpdateExpenseRequest;
 use App\Models\Expense;
+use Inertia\Inertia;
 
 class ExpenseController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
     public function index()
     {
-        //
+        return Inertia::render('Expenses/Index', [
+            'items' => Expense::orderByDesc('transaction_date')->paginate(),
+        ]);
     }
 
     /**
