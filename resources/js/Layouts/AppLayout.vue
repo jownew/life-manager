@@ -54,6 +54,16 @@ const logout = () => {
                                 </NavLink>
                             </div>
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink :href="route('expenses.index')" :active="route().current('expenses.index')">
+                                    Expenses
+                                </NavLink>
+                            </div>
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink :href="route('currencies.index')" :active="route().current('currencies.index')">
+                                    Currencies
+                                </NavLink>
+                            </div>
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('paymentTypes.index')" :active="route().current('paymentTypes.index')">
                                     Payment Types
                                 </NavLink>

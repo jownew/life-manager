@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\PaymentTypeController;
 
@@ -49,6 +50,14 @@ Route::middleware([
         Route::patch('/{id}', [ExpenseController::class, 'update'])->name('update');
         Route::post('/', [ExpenseController::class, 'store'])->name('store');
         Route::delete('/{id}', [ExpenseController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::name('currencies.')->prefix('currencies')->group(function () {
+        Route::get('/', [CurrencyController::class, 'index'])->name('index');
+        Route::get('/{id}', [CurrencyController::class, 'show'])->name('show');
+        Route::patch('/{id}', [CurrencyController::class, 'update'])->name('update');
+        Route::post('/', [CurrencyController::class, 'store'])->name('store');
+        Route::delete('/{id}', [CurrencyController::class, 'destroy'])->name('destroy');
     });
 });
 

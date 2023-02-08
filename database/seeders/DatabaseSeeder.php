@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             [
                 UserSeeder::class,
                 PaymentTypeSeeder::class,
+                CurrencySeeder::class,
                 ExpenseSeeder::class,
             ]
         );
