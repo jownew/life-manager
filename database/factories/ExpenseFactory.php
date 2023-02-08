@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use App\Models\Currency;
 use App\Models\PaymentType;
 
 /**
@@ -26,7 +27,8 @@ class ExpenseFactory extends Factory
             'transaction_date' => $date,
             'due_date' =>  $date,
             'paid_date' =>  $date,
-            'payment_type_id' => PaymentType::all()->first()->id,
+            'payment_type_id' => PaymentType::pluck('id')->random(),
+            'currency_id' => Currency::pluck('id')->random(),
         ];
     }
 }

@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreExpenseRequest;
-use App\Http\Requests\UpdateExpenseRequest;
-use App\Models\Expense;
+use App\Http\Requests\StoreCurrencyRequest;
+use App\Http\Requests\UpdateCurrencyRequest;
+use App\Models\Currency;
 use Inertia\Inertia;
 
-class ExpenseController extends Controller
+class CurrencyController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +16,8 @@ class ExpenseController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Expenses/Index', [
-            'items' => Expense::with(['Currency', 'PaymentType'])->orderByDesc('transaction_date')->paginate(),
+        return Inertia::render('Currencies/Index', [
+            'items' => Currency::all()
         ]);
     }
 
@@ -34,10 +34,10 @@ class ExpenseController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreExpenseRequest  $request
+     * @param  \App\Http\Requests\StoreCurrencyRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreExpenseRequest $request)
+    public function store(StoreCurrencyRequest $request)
     {
         //
     }
@@ -45,10 +45,10 @@ class ExpenseController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Expense  $expense
+     * @param  \App\Models\Currency  $currency
      * @return \Illuminate\Http\Response
      */
-    public function show(Expense $expense)
+    public function show(Currency $currency)
     {
         //
     }
@@ -56,10 +56,10 @@ class ExpenseController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Expense  $expense
+     * @param  \App\Models\Currency  $currency
      * @return \Illuminate\Http\Response
      */
-    public function edit(Expense $expense)
+    public function edit(Currency $currency)
     {
         //
     }
@@ -67,11 +67,11 @@ class ExpenseController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateExpenseRequest  $request
-     * @param  \App\Models\Expense  $expense
+     * @param  \App\Http\Requests\UpdateCurrencyRequest  $request
+     * @param  \App\Models\Currency  $currency
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateExpenseRequest $request, Expense $expense)
+    public function update(UpdateCurrencyRequest $request, Currency $currency)
     {
         //
     }
@@ -79,10 +79,10 @@ class ExpenseController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Expense  $expense
+     * @param  \App\Models\Currency  $currency
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Expense $expense)
+    public function destroy(Currency $currency)
     {
         //
     }
