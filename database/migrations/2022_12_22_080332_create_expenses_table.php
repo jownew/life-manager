@@ -16,11 +16,11 @@ return new class extends Migration
         Schema::create('expenses', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->decimal('amount', $precision = 8, $scale = 2);
             $table->date('transaction_date');
-            $table->date('due_date');
-            $table->date('paid_date');
+            $table->date('due_date')->nullable();
+            $table->date('paid_date')->nullable();
             $table->uuid('payment_type_id');
             $table->uuid('currency_id');
             $table->timestamps();

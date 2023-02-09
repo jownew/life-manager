@@ -19,7 +19,7 @@ class ExpenseFactory extends Factory
      */
     public function definition()
     {
-        $date = fake()->dateTimeBetween('-2 month', '+2 month');
+        $date = fake()->dateTimeBetween('-2 month', '+2 month')->format('Y-m-d');
         return [
             'name' => fake()->name(),
             'description' => fake()->name(),

@@ -23,14 +23,14 @@ class CurrencySeeder extends Seeder
     {
         $currencies = [
             [
-                'name' => 'US Dollar',
-                'code' => 'USD',
-                'symbol' => 'US$',
-            ],
-            [
                 'name' => 'Singapore Dollar',
                 'code' => 'SGD',
                 'symbol' => 'S$',
+            ],
+            [
+                'name' => 'US Dollar',
+                'code' => 'USD',
+                'symbol' => 'US$',
             ],
             [
                 'name' => 'Philippine Peso',
