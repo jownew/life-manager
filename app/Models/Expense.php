@@ -11,6 +11,17 @@ class Expense extends Model
     use HasUuids;
     use HasFactory;
 
+    public $fillable = [
+        'name',
+        'amount',
+        'transaction_date',
+        'currency_id',
+        'payment_type_id',
+        'description',
+        'due_date',
+        'paid_date',
+    ];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
