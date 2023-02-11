@@ -17,6 +17,7 @@ const props = defineProps({
     items: Object,
     currencies: Array,
     paymentTypes: Array,
+    categories: Array,
 });
 
 const itemForm = useForm({
@@ -25,6 +26,7 @@ const itemForm = useForm({
     payment_type_id: '',
     amount: null,
     transaction_date: null,
+    category: '',
 });
 
 const data = reactive({
@@ -57,6 +59,7 @@ const resetItem = () => {
     itemForm.currency_id = props.currencies[0]?.id;
     itemForm.payment_type_id = props.paymentTypes[0]?.id;
     itemForm.amount = null;
+    itemForm.category = '';
     itemForm.transaction_date =  moment().format("YYYY-MM-DD");
 }
 
@@ -67,6 +70,7 @@ const getItem = (id) => {
         itemForm.payment_type_id = response.data.payment_type_id;
         itemForm.amount = response.data.amount;
         itemForm.transaction_date = response.data.transaction_date;
+        itemForm.category = response.data.categories[0]?.name;
     });
 }
 
@@ -186,6 +190,15 @@ const deleteItem = (id) => {
                             class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
                             v-model="itemForm.amount" type="number" id="amount" />
                         <InputError :message="itemForm.errors.amount" class="mt-2" />
+                    </div>
+                    <div class="col-span-6 sm:col-span-4">
+                        <InputLabel for="category" value="Category" />
+                        <TextInput id="category" v-model="itemForm.category" list="categories" type="text" class="mt-1 block w-full" />
+                        <datalist id="categories">
+                            <option :key="category.id" :value="category.name" v-for="category in props.categories" />
+                            <option value="Makeup" />
+                        </datalist>
+                        <InputError :message="itemForm.errors.category" class="mt-2" />
                     </div>
                     <div class="col-span-6 sm:col-span-4">
                         <InputLabel for="transaction_date" value="Date" />
