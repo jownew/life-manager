@@ -37,4 +37,9 @@ class Expense extends Model
     {
         return $this->belongsTo(Currency::class);
     }
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class);
+    }
 }

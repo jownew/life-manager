@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreExpenseRequest;
 use App\Http\Requests\UpdateExpenseRequest;
+use App\Models\Category;
 use App\Models\Currency;
 use App\Models\Expense;
 use App\Models\PaymentType;
@@ -19,9 +20,10 @@ class ExpenseController extends Controller
     public function index()
     {
         return Inertia::render('Expenses/Index', [
-            'items' => Expense::with(['Currency', 'PaymentType'])->orderByDesc('transaction_date')->paginate(),
+            'items' => Expense::with(['Categories', 'Currency', 'PaymentType'])->orderByDesc('transaction_date')->paginate(),
             'currencies' => Currency::all(),
             'paymentTypes' => PaymentType::all(),
+            'categories' => Category::all(),
         ]);
     }
 
@@ -64,7 +66,7 @@ class ExpenseController extends Controller
      */
     public function show(Expense $expense, string $id)
     {
-        $expense = Expense::find($id);
+        $expense = Expense::with('Categories')->find($id);
 
         if (request()->wantsJson()) {
             return $expense;
@@ -98,6 +100,8 @@ class ExpenseController extends Controller
         $expense = Expense::find($id);
         
         $expense->update($request->all());
+
+        Category::addCategory($expense->id, $request->category);
 
         return redirect()->back()->with('message', "$expense->name updated successfully");
     }
