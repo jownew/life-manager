@@ -112,7 +112,7 @@ class ExpenseController extends Controller
      * @param  \App\Models\Expense  $expense
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Expense $expense, string $id)
+    public function destroy(string $id)
     {
         $expense = Expense::find($id);
 
