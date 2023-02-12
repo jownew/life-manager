@@ -10,4 +10,9 @@ class PaymentType extends Model
 {
     use HasUuids;
     use HasFactory;
+
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class);
+    }
 }
