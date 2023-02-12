@@ -79,11 +79,21 @@ class PaymentTypeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\PaymentType  $paymentType
-     * @return \Illuminate\Http\Response
+     * @param  string $id
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(PaymentType $paymentType)
+    public function destroy(string $id)
     {
-        //
+        $paymentType = PaymentType::findOrFail($id);
+
+        if ($paymentType->expenses()->count() > 0) {
+            return redirect()->back()->with('message', "$paymentType->name delete failed due associated exepnses.");
+        }
+
+        if ($paymentType->delete()) {
+            return redirect()->back()->with('message', "$paymentType->name deleted successfully");
+        }
+        
+        return redirect()->back()->with('message', "$paymentType->name delete failed due an error.");
     }
 }
