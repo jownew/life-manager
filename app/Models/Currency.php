@@ -10,4 +10,9 @@ class Currency extends Model
 {
     use HasUUids;
     use HasFactory;
+
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class);
+    }
 }
