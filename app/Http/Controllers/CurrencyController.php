@@ -79,11 +79,21 @@ class CurrencyController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Currency  $currency
-     * @return \Illuminate\Http\Response
+     * @param  string $id
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Currency $currency)
+    public function destroy(string $id)
     {
-        //
+        $currency = Currency::findOrFail($id);
+
+        if ($currency->expenses()->count() > 0) {
+            return redirect()->back()->with('message', "$currency->name delete failed due associated exepnses.");
+        }
+
+        if ($currency->delete()) {
+            return redirect()->back()->with('message', "$currency->name deleted successfully");
+        }
+        
+        return redirect()->back()->with('message', "$currency->name delete failed due an error.");
     }
 }
