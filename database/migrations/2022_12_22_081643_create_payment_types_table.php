@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('payment_types', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
-            $table->string('description');
-            $table->integer('user_id');
+            $table->string('description')->nullable();
+            $table->integer('user_id')->nullable();
             $table->timestamps();
         });
     }

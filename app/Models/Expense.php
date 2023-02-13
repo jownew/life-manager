@@ -11,7 +11,7 @@ class Expense extends Model
     use HasUuids;
     use HasFactory;
 
-    public $fillable = [
+    protected $fillable = [
         'name',
         'amount',
         'transaction_date',

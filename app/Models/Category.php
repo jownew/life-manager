@@ -11,7 +11,7 @@ class Category extends Model
     use HasUUids;
     use HasFactory;
 
-    public $fillable = [
+    protected $fillable = [
         'name',
         'parent_id',
     ];

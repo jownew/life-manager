@@ -4,8 +4,12 @@ import SecondaryButton from '@/Components/SecondaryButton.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import DangerButton from '@/Components/DangerButton.vue';
 import { useForm } from '@inertiajs/inertia-vue3';
-import { reactive } from 'vue';
+import { nextTick, reactive, ref } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
+import InputError from '@/Components/InputError.vue';
+import TextInput from '@/Components/TextInput.vue';
+import DialogModal from '@/Components/DialogModal.vue';
+import InputLabel from '@/Components/InputLabel.vue';
 
 const props = defineProps({
     items: Array,
@@ -14,6 +18,10 @@ const props = defineProps({
 const data = reactive({
     'itemId': '',
 });
+
+const editingItem = ref(false);
+const editingItemText = ref('Edit');
+const nameInput = ref(null);
 
 const itemForm = useForm({
     name: '',
@@ -28,9 +36,42 @@ const deleteItem = (id) => {
 
 const editItem = (id) => {
     data.itemId = id;
-    console.log('edit item');
+
+    itemForm.clearErrors();
+
+    if (id == 0) {
+        resetItem();
+    } else {
+        getItem(id);
+    }
+
+    editingItemText.value = id == 0 ? 'New' : 'Edit'
+    editingItem.value = true;
+
+    nextTick(() => {nameInput.value.focus()});
+};
+
+const resetItem = () => {
+    itemForm.name = "";
 }
 
+const getItem = (id) => {
+    return axios.get(route('paymentTypes.show', id)).then(response => {
+        itemForm.name = response.data.name;
+    });
+}
+
+const saveItem = () => {
+    if (data.itemId == 0) {
+        itemForm.post(route('paymentTypes.store'), {
+            onSuccess: () => editingItem.value = false,
+        });
+    } else {
+        itemForm.patch(route('paymentTypes.update', data.itemId), {
+            onSuccess: () => editingItem.value = false,
+        });
+    }
+};
 </script>
 
 <template>
@@ -56,8 +97,8 @@ const editItem = (id) => {
                                 <div
                                     class="table-cell text-left border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
                                 </div>
-                                <div class="table-cell text-left">Name</div>
-                                <div class="table-cell text-left"></div>
+                                <div class="table-cell text-left border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">Name</div>
+                                <div class="table-cell text-left border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400"></div>
                             </div>
                         </div>
                         <div class="md:table-row-group">
@@ -85,5 +126,31 @@ const editItem = (id) => {
                 </div>
             </div>
         </div>
+        <DialogModal :show="editingItem" @close="editingItem = false">
+            <template #title>
+                {{ editingItemText }} Item
+            </template>
+
+            <template #content>
+                <div class="grid gap-6" @keyup.enter="saveItem">
+                    <div class="col-span-6 sm:col-span-4">
+                        <InputLabel for="name" value="Name" />
+                        <TextInput id="name" v-model="itemForm.name" type="text" class="mt-1 block w-full" autofocus ref="nameInput" />
+                        <InputError :message="itemForm.errors.name" class="mt-2" />
+                    </div>
+                </div>
+            </template>
+
+            <template #footer>
+                <SecondaryButton @click="editingItem = false">
+                    Nevermind
+                </SecondaryButton>
+
+                <PrimaryButton class="ml-2" @click="saveItem" :class="{ 'opacity-25': itemForm.processing }"
+                    :disabled="itemForm.processing">
+                    Save
+                </PrimaryButton>
+            </template>
+        </DialogModal>
     </AppLayout>
 </template>
