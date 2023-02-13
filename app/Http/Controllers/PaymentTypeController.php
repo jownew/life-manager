@@ -35,22 +35,36 @@ class PaymentTypeController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\StorePaymentTypeRequest  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(StorePaymentTypeRequest $request)
     {
-        //
+        $paymentType = PaymentType::create(
+            $request->validate([
+                'name' => ['required'],
+            ])
+        );
+
+        return redirect()->back()->with('message', "$paymentType->name added successfully");
     }
 
     /**
      * Display the specified resource.
      *
      * @param  \App\Models\PaymentType  $paymentType
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
-    public function show(PaymentType $paymentType)
+    public function show(string $id)
     {
-        //
+        $expaymentType = PaymentType::find($id);
+
+        if (request()->wantsJson()) {
+            return $expaymentType;
+        }
+
+        return Inertia::render('Expenses/Show', [
+            'item' => $expaymentType
+        ]);
     }
 
     /**
@@ -69,11 +83,15 @@ class PaymentTypeController extends Controller
      *
      * @param  \App\Http\Requests\UpdatePaymentTypeRequest  $request
      * @param  \App\Models\PaymentType  $paymentType
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(UpdatePaymentTypeRequest $request, PaymentType $paymentType)
+    public function update(UpdatePaymentTypeRequest $request, string $id)
     {
-        //
+        $paymentType = PaymentType::find($id);
+        
+        $paymentType->update($request->all());
+
+        return redirect()->back()->with('message', "$paymentType->name updated successfully");
     }
 
     /**
