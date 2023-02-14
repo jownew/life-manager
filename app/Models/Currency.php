@@ -11,6 +11,12 @@ class Currency extends Model
     use HasUUids;
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'code',
+        'symbol',
+    ];
+
     public function expenses()
     {
         return $this->hasMany(Expense::class);
