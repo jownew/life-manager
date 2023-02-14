@@ -35,22 +35,38 @@ class CurrencyController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\StoreCurrencyRequest  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(StoreCurrencyRequest $request)
     {
-        //
+        $currency = Currency::create(
+            $request->validate([
+                'name' => ['required'],
+                'code' => ['required'],
+                'symbol' => '',
+            ])
+        );
+
+        return redirect()->back()->with('message', "$currency->name added successfully");
     }
 
     /**
      * Display the specified resource.
      *
      * @param  \App\Models\Currency  $currency
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
-    public function show(Currency $currency)
+    public function show(string $id)
     {
-        //
+        $currency = Currency::findOrFail($id);
+
+        if (request()->wantsJson()) {
+            return $currency;
+        }
+
+        return Inertia::render('Currencies/Show', [
+            'item' => $currency
+        ]);
     }
 
     /**
@@ -69,11 +85,15 @@ class CurrencyController extends Controller
      *
      * @param  \App\Http\Requests\UpdateCurrencyRequest  $request
      * @param  \App\Models\Currency  $currency
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(UpdateCurrencyRequest $request, Currency $currency)
+    public function update(UpdateCurrencyRequest $request, string $id)
     {
-        //
+        $currency = Currency::findOrFail($id);
+        
+        $currency->update($request->all());
+
+        return redirect()->back()->with('message', "$currency->name updated successfully");
     }
 
     /**
