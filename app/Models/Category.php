@@ -23,6 +23,10 @@ class Category extends Model
     
     public static function addCategory($expenseId, $categoryName)
     {
+        if (!$categoryName) {
+            return;
+        }
+        
         $category = Category::where('name', 'like', $categoryName)->first();
 
         if (!$category) {
