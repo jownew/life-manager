@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\PaymentTypeController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,5 +60,7 @@ Route::middleware([
         Route::post('/', [CurrencyController::class, 'store'])->name('store');
         Route::delete('/{id}', [CurrencyController::class, 'destroy'])->name('destroy');
     });
+
+    Route::prefix('users')->resource('users', UserController::class);
 });
 
