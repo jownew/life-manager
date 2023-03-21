@@ -28,16 +28,6 @@ class ExpenseController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\StoreExpenseRequest  $request
@@ -62,11 +52,11 @@ class ExpenseController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\Expense  $expense
-     * @return \Inertia\Response
+     * @return \Inertia\Response|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|array<\Illuminate\Database\Eloquent\Builder>|null returnedPHP(PHP0408)
      */
     public function show(Expense $expense, string $id)
     {
-        $expense = Expense::with('Categories')->find($id);
+        $expense = Expense::with('Categories')->findOrFail($id);
 
         if (request()->wantsJson()) {
             return $expense;
@@ -78,17 +68,6 @@ class ExpenseController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Expense  $expense
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Expense $expense)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\UpdateExpenseRequest  $request
@@ -97,8 +76,8 @@ class ExpenseController extends Controller
      */
     public function update(UpdateExpenseRequest $request, string $id)
     {
-        $expense = Expense::find($id);
-        
+        $expense = Expense::findOrFail($id);
+
         $expense->update($request->all());
 
         Category::addCategory($expense->id, $request->category);
@@ -114,12 +93,12 @@ class ExpenseController extends Controller
      */
     public function destroy(string $id)
     {
-        $expense = Expense::find($id);
+        $expense = Expense::findOrFail($id);
 
         if ($expense->delete()) {
             return redirect()->back()->with('message', "$expense->name deleted successfully");
         }
-        
+
         return redirect()->back()->with('message', "$expense->name delete failed due an error.");
     }
 }
