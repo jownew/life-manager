@@ -8,14 +8,16 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 
-defineProps({
+const props = defineProps({
     canResetPassword: Boolean,
     status: String,
+    devUsername: String,
+    devSecret: String,
 });
 
 const form = useForm({
-    email: '',
-    password: '',
+    email: props.devUsername,
+    password: props.devSecret,
     remember: false,
 });
 
