@@ -103,6 +103,54 @@
                     />
                     <InputError :message="form.errors.reminder" class="mt-2" />
                 </div>
+
+                <div class="col-span-2">
+                    <InputLabel for="is_owed" value="Event Type" />
+                    <template v-if="props.isReadOnly">
+                        <input
+                            class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
+                            :value="form.is_owed === null ? 'Schedule' : form.is_owed == 1 ? 'Expense' : 'Income'"
+                            type="text"
+                            id="is_owed"
+                            :readonly="props.isReadOnly"
+                        />
+                    </template>
+                    <template v-else>
+                        <select
+                            id="is_owed"
+                            v-model="form.is_owed"
+                            class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
+                            :readonly="props.isReadOnly"
+                        >
+                            <option :value="null">Schedule</option>
+                            <option value="1">Expense</option>
+                            <option value="0">Income</option>
+                        </select>
+                    </template>
+                    <InputError :message="form.errors.is_owed" class="mt-2" />
+                </div>
+
+                <div class="col-span-2" v-if="form.is_owed !== null">
+                    <InputLabel for="currency_id" value="Currency" />
+                    <select id="currency_id" v-model="form.currency_id"
+                        class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
+                        <option :key="currency.id" :value="currency.id" v-for="currency in props.currencies">{{
+                            currency.name
+                        }}</option>
+                    </select>
+                </div>
+
+                <div class="col-span-2" v-if="form.is_owed !== null">
+                    <InputLabel for="amount" value="Amount" />
+                    <input
+                        class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
+                        v-model="form.amount"
+                        type="text"
+                        id="amount"
+                        :readonly="props.isReadOnly"
+                    />
+                    <InputError :message="form.errors.amount" class="mt-2" />
+                </div>
             </div>
         </template>
 
@@ -151,6 +199,7 @@ const props = defineProps({
     isOpen: Boolean,
     itemId: String,
     isReadOnly: Boolean,
+    currencies: Array,
 })
 
 const close = () => {
@@ -183,9 +232,18 @@ const form = useForm({
     intervals: 12,
     reminder: 60,
     next: null,
+    currency_id: null,
+    amount: null,
+    is_owed: null,
 });
 
 const saveForm = () => {
+    console.log(form.is_owed);
+    if (form.is_owed === null) {
+        form.amount = null;
+        form.currency_id = null;
+    }
+
     if (props.itemId == '') {
         form.post(route('events.store'), {
             onSuccess: () => close(),
@@ -243,6 +301,9 @@ const fetchData = () => {
         form.intervals = response.data.intervals;
         form.reminder = response.data.reminder;
         form.next = null;
+        form.is_owed = response.data.is_owed;
+        form.currency_id = response.data.currency_id;
+        form.amount = response.data.amount;
     });
 }
 
@@ -253,9 +314,12 @@ const resetForm = () => {
     form.event_date = moment().format('YYYY-MM-DD');
     form.action_date = null;
     form.status = 'active';
-    form.intervals = 12
-    form.reminder = 60
+    form.intervals = 12;
+    form.reminder = 60;
     form.next = null;
+    form.is_owed = null;
+    form.currency_id = null;
+    form.amount = null;
 }
 
 </script>

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Inertia\Inertia;
 use App\Http\Requests\StoreEventRequest;
 use App\Http\Requests\UpdateEventRequest;
+use App\Models\Currency;
 use App\Models\Event;
-use Inertia\Inertia;
 
 class EventController extends Controller
 {
@@ -16,6 +17,7 @@ class EventController extends Controller
     {
         return Inertia::render('Events/Index', [
             'items' => Event::orderBy('event_date')->paginate(),
+            'currencies' => Currency::all(),
         ]);
     }
 

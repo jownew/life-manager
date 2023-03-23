@@ -22,6 +22,9 @@ class Event extends Model
         'action_date',
         'status',
         'is_private',
+        'is_owed',
+        'currency_id',
+        'amount',
     ];
 
     protected $appends = ['days'];

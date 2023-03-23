@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('events', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->integer('user_id');
+            $table->foreignId('user_id');
             $table->string('title', 200);
             $table->text('description')->nullable();
             $table->integer('intervals')->default(12);
@@ -22,6 +22,9 @@ return new class extends Migration
             $table->dateTime('action_date')->nullable();
             $table->string('status', 20)->default('active');
             $table->boolean('is_private')->default(1);
+            $table->boolean('is_owed')->nullable();
+            $table->foreignId('currency_id')->nullable();
+            $table->decimal('amount', $precision = 8, $scale = 2)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

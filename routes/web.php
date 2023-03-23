@@ -63,6 +63,6 @@ Route::middleware([
     });
 
     Route::prefix('users')->resource('users', UserController::class);
-    Route::prefix('events')->resource('events', EventController::class)->except(['update']);
+    Route::prefix('events')->resource('events', EventController::class);
 });
 

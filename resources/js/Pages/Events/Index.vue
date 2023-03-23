@@ -36,6 +36,8 @@
                                 </div>
                                 <div class="md:table-cell hidden md:visible">
                                     {{ item.title }}
+                                    <span class="bg-green-100 text-green-800 px-2.5 py-0.5 rounded-lg text-xs" v-if="item.is_owed === 0">I</span>
+                                    <span class="bg-red-100 text-red-800 px-2.5 py-0.5 rounded-lg text-xs" v-if="item.is_owed === 1">E</span>
                                 </div>
                                 <div class="md:table-cell hidden md:visible text-center">
                                     {{  item.days }}
@@ -67,54 +69,7 @@
                 </div>
             </div>
         </div>
-        <DialogModal :show="editingItem" @close="editingItem = false">
-            <template #title>
-                {{ editingItemText }} Item
-            </template>
-
-            <template #content>
-                <div class="grid gap-6" @keyup.enter="saveItem">
-                    <div class="col-span-6 sm:col-span-4">
-                        <InputLabel for="title" value="Title" />
-                        <TextInput id="title" v-model="itemForm.title" type="text" class="mt-1 block w-full" autofocus ref="nameInput" />
-                        <InputError :message="itemForm.errors.title" class="mt-2" />
-                    </div>
-                    <div class="col-span-6 sm:col-span-4">
-                        <InputLabel for="description" value="Description" />
-                        <textarea name="description" v-model="itemForm.description" id="description"
-                            class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
-                            cols="30" rows="5"></textarea>
-                        <InputError :message="itemForm.errors.description" class="mt-2" />
-                    </div>
-                    <div class="col-span-6 sm:col-span-4">
-                        <InputLabel for="amount" value="Amount" />
-                        <input
-                            class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
-                            v-model="itemForm.amount" type="number" id="amount" />
-                        <InputError :message="itemForm.errors.amount" class="mt-2" />
-                    </div>
-                    <div class="col-span-6 sm:col-span-4">
-                        <InputLabel for="transaction_date" value="Date" />
-                        <input
-                            class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
-                            v-model="itemForm.transaction_date" type="date" id="transaction_date" />
-                        <InputError :message="itemForm.errors.transaction_date" class="mt-2" />
-                    </div>
-                </div>
-            </template>
-
-            <template #footer>
-                <SecondaryButton @click="editingItem = false">
-                    Nevermind
-                </SecondaryButton>
-
-                <PrimaryButton class="ml-2" @click="saveItem" :class="{ 'opacity-25': itemForm.processing }"
-                    :disabled="itemForm.processing">
-                    Save
-                </PrimaryButton>
-            </template>
-        </DialogModal>
-        <EventForm :isOpen="data.isEditModalOpen" :isReadOnly="data.isReadOnly" :itemId="data.itemId"
+        <EventForm :isOpen="data.isEditModalOpen" :isReadOnly="data.isReadOnly" :itemId="data.itemId" :currencies="currencies"
             @close="closeModal" @toReadOnly="toReadOnly" />
     </AppLayout>
 </template>
@@ -123,21 +78,17 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import moment from "moment";
 import NavLink from '@/Components/NavLink.vue';
-import DialogModal from '@/Components/DialogModal.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import DangerButton from '@/Components/DangerButton.vue';
 import { Inertia } from '@inertiajs/inertia';
 import { useForm } from '@inertiajs/inertia-vue3';
-import InputLabel from '@/Components/InputLabel.vue';
-import { nextTick, reactive, ref } from 'vue';
-import InputError from '@/Components/InputError.vue';
-import TextInput from '@/Components/TextInput.vue';
+import { reactive } from 'vue';
 import EventForm from './Partials/EventForm.vue';
 
 const props = defineProps({
     items: Object,
-    paymentTypes: Array,
+    currencies: Array,
 });
 
 const itemForm = useForm({
@@ -154,15 +105,10 @@ const data = reactive({
     isReadOnly: false,
 });
 
-const editingItem = ref(false);
-const editingItemText = ref('Edit');
-const nameInput = ref(null);
-
 const editItem = (id = '') => {
     data.itemId = id;
     data.isEditModalOpen = true;
 }
-
 
 const deleteItem = (id) => {
     Inertia.delete(route('events.destroy', id), {
