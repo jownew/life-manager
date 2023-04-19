@@ -32,7 +32,7 @@
                     <InputError :message="form.errors.description" class="mt-2" />
                 </div>
 
-                <div class="col-span-6 sm:col-span-3">
+                <div class="md:col-span-2 col-span-6">
                     <InputLabel for="event_date" value="Event Date" />
                     <input
                         class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
@@ -44,7 +44,7 @@
                     <InputError :message="form.errors.event_date" class="mt-2" />
                 </div>
 
-                <div class="col-span-6 sm:col-span-3">
+                <div class="md:col-span-2 col-span-6">
                     <InputLabel for="action_date" value="Action Date" />
                     <input
                         class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
@@ -56,7 +56,21 @@
                     <InputError :message="form.errors.action_date" class="mt-2" />
                 </div>
 
-                <div class="col-span-2">
+                <div class="md:col-span-2 col-span-6">
+                  <div v-if="props.itemId == ''">
+                    <InputLabel for="frequency" value="Frequency" />
+                    <input
+                        class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
+                        v-model="form.frequency"
+                        type="number"
+                        id="frequency"
+                        :readonly="props.isReadOnly"
+                    />
+                    <InputError :message="form.errors.frequency" class="mt-2" />
+                  </div>
+                </div>
+
+                <div class="md:col-span-2 col-span-6">
                     <InputLabel for="status" value="Status" />
                     <template v-if="props.isReadOnly">
                         <input
@@ -80,7 +94,7 @@
                     <InputError :message="form.errors.status" class="mt-2" />
                 </div>
 
-                <div class="col-span-2">
+                <div class="md:col-span-2 col-span-6">
                     <InputLabel for="intervals" value="Next In (months)" />
                     <input
                         class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
@@ -92,7 +106,7 @@
                     <InputError :message="form.errors.intervals" class="mt-2" />
                 </div>
 
-                <div class="col-span-2">
+                <div class="md:col-span-2 col-span-6">
                     <InputLabel for="reminder" value="Reminder (Days)" />
                     <input
                         class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
@@ -104,7 +118,7 @@
                     <InputError :message="form.errors.reminder" class="mt-2" />
                 </div>
 
-                <div class="col-span-2">
+                <div class="md:col-span-2 col-span-6">
                     <InputLabel for="is_owed" value="Event Type" />
                     <template v-if="props.isReadOnly">
                         <input
@@ -130,7 +144,7 @@
                     <InputError :message="form.errors.is_owed" class="mt-2" />
                 </div>
 
-                <div class="col-span-2" v-if="form.is_owed !== null">
+                <div class="md:col-span-2 col-span-6" v-if="form.is_owed !== null">
                     <InputLabel for="currency_id" value="Currency" />
                     <select id="currency_id" v-model="form.currency_id"
                         class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
@@ -140,7 +154,7 @@
                     </select>
                 </div>
 
-                <div class="col-span-2" v-if="form.is_owed !== null">
+                <div class="md:col-span-2 col-span-6" v-if="form.is_owed !== null">
                     <InputLabel for="amount" value="Amount" />
                     <input
                         class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
@@ -207,7 +221,6 @@ const close = () => {
 };
 
 const toReadOnly = (value) => {
-    console.log('readonly step 1');
     emit('toReadOnly', value);
 }
 
@@ -230,6 +243,7 @@ const form = useForm({
     action_date: null,
     status: 'active',
     intervals: 12,
+    frequency: 1,
     reminder: 60,
     next: null,
     currency_id: null,
@@ -238,7 +252,6 @@ const form = useForm({
 });
 
 const saveForm = () => {
-    console.log(form.is_owed);
     if (form.is_owed === null) {
         form.amount = null;
         form.currency_id = null;
@@ -246,6 +259,11 @@ const saveForm = () => {
 
     if (props.itemId == '') {
         form.post(route('events.store'), {
+            onBefore: () => {
+              if (form.frequency > 1) {
+                confirm('Are you sure you want to create multiple events based on the frequency?')
+              }
+            },
             onSuccess: () => close(),
         });
     } else {

@@ -50,11 +50,13 @@ class EventController extends Controller
      */
     public function store(StoreEventRequest $request)
     {
+        $frequency = $request->frequency > 0 ? $request->frequency : 1;
+
         $request
             ->validate(
                 [
                     'title' => 'required',
-                    'description' => 'required',
+                    'description' => '',
                     'event_date' => 'required',
                     'status' => 'required',
                     'intervals' => 'required|integer',
@@ -66,10 +68,15 @@ class EventController extends Controller
             );
 
         $user = $request->user();
+        for ($i = 0; $i < $frequency; $i++) {
+            $computedDate = date('Y-m-d', strtotime($request->event_date . '+' . ($i * $request->intervals) . ' months'));
 
-        $event = new Event($request->all());
-        $event->user_id = $user->id;
-        $event->save();
+            $event = new Event($request->all());
+            $event->event_date = $computedDate;
+            $event->user_id = $user->id;
+            $event->save();
+        }
+
         if (request()->wantsJson()) {
             return $event;
         }
