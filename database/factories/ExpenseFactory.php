@@ -23,7 +23,7 @@ class ExpenseFactory extends Factory
         return [
             'name' => fake()->name(),
             'description' => fake()->name(),
-            'amount' => fake()->randomFloat(2),
+            'amount' => fake()->randomFloat(2, 1, 20000),
             'transaction_date' => $date,
             'due_date' =>  $date,
             'paid_date' =>  $date,
