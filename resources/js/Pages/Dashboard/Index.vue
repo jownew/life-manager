@@ -28,14 +28,13 @@
 
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import Welcome from '@/Components/Welcome.vue';
 
 const props = defineProps({
   expenses: Array
 });
 
 const sum = props.expenses.reduce((accumulator, currentValue) => {
-  return accumulator + currentValue.amount;
+  return accumulator + (+currentValue.amount);
 }, 0);
 
 </script>
