@@ -68,6 +68,9 @@ Route::middleware([
     });
 
     Route::prefix('users')->resource('users', UserController::class);
+    Route::name('events.')->prefix('events')->group(function () {
+        Route::get('/all', [EventController::class, 'showAll'])->name('showAll');
+    });
     Route::prefix('events')->resource('events', EventController::class);
 });
 

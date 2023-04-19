@@ -11,13 +11,26 @@ use App\Models\Event;
 class EventController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of active events.
      */
     public function index()
     {
         return Inertia::render('Events/Index', [
+            'items' => Event::orderBy('event_date')->where('status', 'active')->paginate(),
+            'currencies' => Currency::all(),
+            'showAll' => false,
+        ]);
+    }
+
+    /**
+     * Display a listing of all events.
+     */
+    public function showAll()
+    {
+        return Inertia::render('Events/Index', [
             'items' => Event::orderBy('event_date')->paginate(),
             'currencies' => Currency::all(),
+            'showAll' => true,
         ]);
     }
 

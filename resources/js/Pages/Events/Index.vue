@@ -8,8 +8,14 @@
 
     <div class="md:py-3">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-          <div class="md:text-right text-center mx-2">
+        <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-5">
+          <div class="block w-1/2 float-left p-3">
+            <label class="flex items-center">
+              <Checkbox :checked="props.showAll" @click="getItems()" />
+              <span class="ml-2 text-sm text-gray-600">Show All</span>
+            </label>
+          </div>
+          <div class="md:text-right md:w-1/3 text-center mx-2 float-right">
             <PrimaryButton class="my-1" @click="editItem()" :class="{ 'opacity-25': itemForm.processing }"
               :disabled="itemForm.processing">
               New Event
@@ -97,10 +103,12 @@ import { Inertia } from '@inertiajs/inertia';
 import { useForm } from '@inertiajs/inertia-vue3';
 import { reactive } from 'vue';
 import EventForm from './Partials/EventForm.vue';
+import Checkbox from '@/Components/Checkbox.vue';
 
 const props = defineProps({
   items: Object,
   currencies: Array,
+  showAll: Boolean
 });
 
 const itemForm = useForm({
@@ -128,6 +136,14 @@ const deleteItem = (id) => {
     onBefore: () => confirm('Are you sure you want to delete this item?')
   });
 };
+
+const getItems = () => {
+  if (props.showAll) {
+    Inertia.get(route('events.index'));
+  } else {
+    Inertia.get(route('events.showAll'));
+  }
+}
 
 const closeModal = () => {
   data.isEditModalOpen = false;
