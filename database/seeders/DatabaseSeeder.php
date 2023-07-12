@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
                 EventSeeder::class,
                 PaymentTypeSeeder::class,
                 CurrencySeeder::class,
+                CategorySeeder::class,
                 ExpenseSeeder::class,
             ]
         );

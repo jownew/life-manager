@@ -26,7 +26,7 @@ const itemForm = useForm({
     payment_type_id: '',
     amount: null,
     transaction_date: null,
-    category: '',
+    category_id: null,
 });
 
 const data = reactive({
@@ -59,7 +59,7 @@ const resetItem = () => {
     itemForm.currency_id = props.currencies[0]?.id;
     itemForm.payment_type_id = props.paymentTypes[0]?.id;
     itemForm.amount = null;
-    itemForm.category = '';
+    itemForm.category_id = '';
     itemForm.transaction_date =  moment().format("YYYY-MM-DD");
 }
 
@@ -70,7 +70,7 @@ const getItem = (id) => {
         itemForm.payment_type_id = response.data.payment_type_id;
         itemForm.amount = response.data.amount;
         itemForm.transaction_date = response.data.transaction_date;
-        itemForm.category = response.data.categories[0]?.name;
+        itemForm.category_id = response.data.category_id;
     });
 }
 
@@ -122,6 +122,7 @@ const deleteItem = (id) => {
                                 <div class="table-cell text-left">Name</div>
                                 <div class="table-cell text-center px-5">Currency</div>
                                 <div class="table-cell text-right px-5">Amount</div>
+                                <div class="table-cell px-5">Category</div>
                                 <div class="table-cell px-5">Payment</div>
                             </div>
                         </div>
@@ -147,6 +148,9 @@ const deleteItem = (id) => {
                                             maximumFractionDigits: 2
                                         })
                                     }}
+                                </div>
+                                <div class="md:table-cell hidden md:visible px-5">
+                                    {{ item.category?.name }}
                                 </div>
                                 <div class="md:table-cell hidden md:visible px-5">
                                     {{ item.payment_type.name }}
@@ -192,13 +196,13 @@ const deleteItem = (id) => {
                         <InputError :message="itemForm.errors.amount" class="mt-2" />
                     </div>
                     <div class="col-span-6 sm:col-span-4">
-                        <InputLabel for="category" value="Category" />
-                        <TextInput id="category" v-model="itemForm.category" list="categories" type="text" class="mt-1 block w-full" />
-                        <datalist id="categories">
-                            <option :key="category.id" :value="category.name" v-for="category in props.categories" />
-                            <option value="Makeup" />
-                        </datalist>
-                        <InputError :message="itemForm.errors.category" class="mt-2" />
+                        <InputLabel for="category_id" value="Cateogry" />
+                        <select id="category_id" v-model="itemForm.category_id"
+                            class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
+                            <option :key="category.id" :value="category.id" v-for="category in props.categories">{{
+                                category.name
+                            }}</option>
+                        </select>
                     </div>
                     <div class="col-span-6 sm:col-span-4">
                         <InputLabel for="transaction_date" value="Date" />

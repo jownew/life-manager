@@ -16,6 +16,7 @@ class Expense extends Model
         'amount',
         'transaction_date',
         'currency_id',
+        'category_id',
         'payment_type_id',
         'description',
         'due_date',
@@ -38,8 +39,8 @@ class Expense extends Model
         return $this->belongsTo(Currency::class);
     }
 
-    public function categories()
+    public function category()
     {
-        return $this->belongsToMany(Category::class);
+        return $this->belongsTo(Category::class);
     }
 }

@@ -20,7 +20,7 @@ class ExpenseController extends Controller
     public function index()
     {
         return Inertia::render('Expenses/Index', [
-            'items' => Expense::with(['Categories', 'Currency', 'PaymentType'])->orderByDesc('transaction_date')->paginate(),
+            'items' => Expense::with(['category', 'Currency', 'PaymentType'])->orderByDesc('transaction_date')->paginate(),
             'currencies' => Currency::all(),
             'paymentTypes' => PaymentType::all(),
             'categories' => Category::all(),
@@ -56,7 +56,7 @@ class ExpenseController extends Controller
      */
     public function show(Expense $expense, string $id)
     {
-        $expense = Expense::with('Categories')->findOrFail($id);
+        $expense = Expense::with('category')->findOrFail($id);
 
         if (request()->wantsJson()) {
             return $expense;

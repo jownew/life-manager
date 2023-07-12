@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('expenses', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
+            $table->uuid('category_id')->nullable();
             $table->string('description')->nullable();
             $table->decimal('amount', $precision = 8, $scale = 2);
             $table->date('transaction_date');
