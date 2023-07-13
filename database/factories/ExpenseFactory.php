@@ -20,10 +20,11 @@ class ExpenseFactory extends Factory
      */
     public function definition()
     {
-        $date = fake()->dateTimeBetween('-2 month', '+2 month')->format('Y-m-d');
+        $date = fake()->dateTimeBetween('-2 months', 'now')->format('Y-m-d');
+
         return [
-            'name' => fake()->name(),
-            'description' => fake()->name(),
+            'name' => fake()->words(fake()->numberBetween(1, 3), true),
+            'description' => fake()->paragraph(fake()->numberBetween(1, 2), false),
             'category_id' => Category::all()->random()->id,
             'amount' => fake()->randomFloat(2, 1, 500),
             'transaction_date' => $date,
