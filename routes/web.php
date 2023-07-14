@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\DashboardController;
@@ -65,6 +66,14 @@ Route::middleware([
         Route::patch('/{id}', [CurrencyController::class, 'update'])->name('update');
         Route::post('/', [CurrencyController::class, 'store'])->name('store');
         Route::delete('/{id}', [CurrencyController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::name('categories.')->prefix('categories')->group(function () {
+        Route::get('/', [CategoryController::class, 'index'])->name('index');
+        Route::get('/{id}', [CategoryController::class, 'show'])->name('show');
+        Route::patch('/{id}', [CategoryController::class, 'update'])->name('update');
+        Route::post('/', [CategoryController::class, 'store'])->name('store');
+        Route::delete('/{id}', [CategoryController::class, 'destroy'])->name('destroy');
     });
 
     Route::prefix('users')->resource('users', UserController::class);

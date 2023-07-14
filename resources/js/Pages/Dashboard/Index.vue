@@ -21,7 +21,14 @@
               <div class="md:table-row-group">
                 <div class="table-row" v-for="category in categories">
                   <div class="table-cell text-left">{{ category.name }}</div>
-                  <div class="table-cell text-right">1,234.00</div>
+                  <div class="table-cell text-right">
+                    {{
+                      category.budget.toLocaleString('en-US', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                      })
+                    }}
+                  </div>
                   <div class="table-cell text-right">
                     {{
                       subTotals.find(st => st.category == category.name).total.toLocaleString('en-US', {
@@ -33,7 +40,7 @@
                 </div>
                 <div class="table-row">
                   <div class="table-cell text-left">Total</div>
-                  <div class="table-cell text-right">1,234.00</div>
+                  <div class="table-cell text-right">{{ budgetTotal }}</div>
                   <div class="table-cell text-right">
                     {{
                       sum.toLocaleString('en-US', {
@@ -64,6 +71,10 @@ const sum = props.expenses.reduce((accumulator, currentValue) => {
   return accumulator + (+currentValue.amount);
 }, 0);
 
+const budgetTotal = props.categories.reduce((accumulator, currentValue) => {
+  return accumulator + (+currentValue.budget);
+}, 0);
+
 const output = props.categories.map(category => category.name);
 
 const subTotal = (category) => {
@@ -73,7 +84,6 @@ const subTotal = (category) => {
 }
 
 const subTotals = output.map(name => {
-  console.log(name);
   return {
     category: name,
     total: subTotal(name),

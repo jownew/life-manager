@@ -14,19 +14,20 @@ class Category extends Model
     protected $fillable = [
         'name',
         'parent_id',
+        'budget',
     ];
 
     public function expenses()
     {
-        return $this->belongsToMany(Expense::class);
+        return $this->hasMany(Expense::class);
     }
-    
+
     public static function addCategory($expenseId, $categoryName)
     {
         if (!$categoryName) {
             return;
         }
-        
+
         $category = Category::where('name', 'like', $categoryName)->first();
 
         if (!$category) {

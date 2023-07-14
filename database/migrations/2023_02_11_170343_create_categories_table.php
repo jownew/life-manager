@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
+            $table->decimal('budget', $precision = 8, $scale = 2);
             $table->uuid('parent_id')->nullable();
             $table->timestamps();
         });

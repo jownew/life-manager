@@ -25,18 +25,27 @@ class CategorySeeder extends Seeder
         return [
             [
                 'name' => 'Food',
+                'budget' => 500,
             ],
             [
                 'name' => 'Rent',
+                'budget' => 1500,
             ],
             [
                 'name' => 'Internet',
+                'budget' => 60
             ],
             [
                 'name' => 'Insurance',
+                'budget' => 90,
             ],
             [
                 'name' => 'Telecommunication',
+                'budget' => 120,
+            ],
+            [
+                'name' => 'Transportation',
+                'budget' => 110,
             ],
         ];
     }

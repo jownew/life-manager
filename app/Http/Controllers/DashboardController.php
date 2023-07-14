@@ -11,7 +11,6 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        
         return Inertia::render('Dashboard/Index', [
             'expenses' => Expense::with(['category', 'Currency', 'PaymentType'])
                 ->where('transaction_date', '>=', date('Y-m-01'))

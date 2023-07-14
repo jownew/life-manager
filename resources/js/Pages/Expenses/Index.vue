@@ -196,7 +196,7 @@ const deleteItem = (id) => {
                         <InputError :message="itemForm.errors.amount" class="mt-2" />
                     </div>
                     <div class="col-span-6 sm:col-span-4">
-                        <InputLabel for="category_id" value="Cateogry" />
+                        <InputLabel for="category_id" value="Category" />
                         <select id="category_id" v-model="itemForm.category_id"
                             class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
                             <option :key="category.id" :value="category.id" v-for="category in props.categories">{{
