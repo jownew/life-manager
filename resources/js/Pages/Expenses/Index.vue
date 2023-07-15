@@ -1,100 +1,3 @@
-<script setup>
-import AppLayout from '@/Layouts/AppLayout.vue';
-import moment from "moment";
-import NavLink from '@/Components/NavLink.vue';
-import DialogModal from '@/Components/DialogModal.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import DangerButton from '@/Components/DangerButton.vue';
-import { Inertia } from '@inertiajs/inertia';
-import { useForm } from '@inertiajs/inertia-vue3';
-import InputLabel from '@/Components/InputLabel.vue';
-import { nextTick, reactive, ref } from 'vue';
-import InputError from '@/Components/InputError.vue';
-import TextInput from '@/Components/TextInput.vue';
-
-const props = defineProps({
-    items: Object,
-    currencies: Array,
-    paymentTypes: Array,
-    categories: Array,
-});
-
-const itemForm = useForm({
-    name: '',
-    currency_id: '',
-    payment_type_id: '',
-    amount: null,
-    transaction_date: null,
-    category_id: null,
-});
-
-const data = reactive({
-    itemId: 0
-});
-
-const editingItem = ref(false);
-const editingItemText = ref('Edit');
-const nameInput = ref(null);
-
-const editItem = (id) => {
-    data.itemId = id;
-
-    itemForm.clearErrors();
-
-    if (id == 0) {
-        resetItem();
-    } else {
-        getItem(id);
-    }
-
-    editingItemText.value = id == 0 ? 'New' : 'Edit'
-    editingItem.value = true;
-    // nameInput.value.focus()
-    nextTick(() => {nameInput.value.focus()});
-};
-
-const resetItem = () => {
-    itemForm.name = "";
-    itemForm.currency_id = props.currencies[0]?.id;
-    itemForm.payment_type_id = props.paymentTypes[0]?.id;
-    itemForm.amount = null;
-    itemForm.category_id = '';
-    itemForm.transaction_date =  moment().format("YYYY-MM-DD");
-}
-
-const getItem = (id) => {
-    return axios.get(route('expenses.show', id)).then(response => {
-        itemForm.name = response.data.name;
-        itemForm.currency_id = response.data.currency_id;
-        itemForm.payment_type_id = response.data.payment_type_id;
-        itemForm.amount = response.data.amount;
-        itemForm.transaction_date = response.data.transaction_date;
-        itemForm.category_id = response.data.category_id;
-    });
-}
-
-const saveItem = () => {
-    if (data.itemId == 0) {
-        itemForm.post(route('expenses.store'), {
-            onSuccess: () => editingItem.value = false,
-        });
-    } else {
-        itemForm.patch(route('expenses.update', data.itemId), {
-            onSuccess: () => editingItem.value = false,
-        });
-    }
-};
-
-const deleteItem = (id) => {
-    Inertia.delete(route('expenses.destroy', id), {
-        preserveScroll: true,
-        onBefore: () => confirm('Are you sure you want to delete this item?')
-    });
-};
-
-</script>
-
 <template>
     <AppLayout title="Expenses">
         <template #header>
@@ -106,8 +9,13 @@ const deleteItem = (id) => {
         <div class="md:py-3">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <div class="md:text-right text-center mx-2">
-                        <PrimaryButton class="my-1" @click="editItem(0)" :class="{ 'opacity-25': itemForm.processing }"
+                    <div class="md:text-right text-center mx-2 my-2">
+                      <a :href="route('expenses.export')">
+                        <SecondaryButton class="mr-2" :class="{ 'opacity-25': itemForm.processing }">
+                            Export
+                        </SecondaryButton>
+                      </a>
+                        <PrimaryButton @click="editItem(0)" :class="{ 'opacity-25': itemForm.processing }"
                             :disabled="itemForm.processing">
                             New Expense
                         </PrimaryButton>
@@ -251,3 +159,103 @@ const deleteItem = (id) => {
         </DialogModal>
     </AppLayout>
 </template>
+
+<script setup>
+import AppLayout from '@/Layouts/AppLayout.vue';
+import moment from "moment";
+import NavLink from '@/Components/NavLink.vue';
+import DialogModal from '@/Components/DialogModal.vue';
+import SecondaryButton from '@/Components/SecondaryButton.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import DangerButton from '@/Components/DangerButton.vue';
+import { Inertia } from '@inertiajs/inertia';
+import { useForm } from '@inertiajs/inertia-vue3';
+import InputLabel from '@/Components/InputLabel.vue';
+import { nextTick, reactive, ref } from 'vue';
+import InputError from '@/Components/InputError.vue';
+import TextInput from '@/Components/TextInput.vue';
+
+const props = defineProps({
+    items: Object,
+    currencies: Array,
+    paymentTypes: Array,
+    categories: Array,
+});
+
+const itemForm = useForm({
+    name: '',
+    currency_id: '',
+    payment_type_id: '',
+    amount: null,
+    transaction_date: null,
+    category_id: null,
+});
+
+const data = reactive({
+    itemId: 0
+});
+
+const editingItem = ref(false);
+const editingItemText = ref('Edit');
+const nameInput = ref(null);
+
+const editItem = (id) => {
+    data.itemId = id;
+
+    itemForm.clearErrors();
+
+    if (id == 0) {
+        resetItem();
+    } else {
+        getItem(id);
+    }
+
+    editingItemText.value = id == 0 ? 'New' : 'Edit'
+    editingItem.value = true;
+    // nameInput.value.focus()
+    nextTick(() => {nameInput.value.focus()});
+};
+
+const exportItems = () => {
+  return axios.get(route('expenses.export'));
+}
+
+const resetItem = () => {
+    itemForm.name = "";
+    itemForm.currency_id = props.currencies[0]?.id;
+    itemForm.payment_type_id = props.paymentTypes[0]?.id;
+    itemForm.amount = null;
+    itemForm.category_id = '';
+    itemForm.transaction_date =  moment().format("YYYY-MM-DD");
+}
+
+const getItem = (id) => {
+    return axios.get(route('expenses.show', id)).then(response => {
+        itemForm.name = response.data.name;
+        itemForm.currency_id = response.data.currency_id;
+        itemForm.payment_type_id = response.data.payment_type_id;
+        itemForm.amount = response.data.amount;
+        itemForm.transaction_date = response.data.transaction_date;
+        itemForm.category_id = response.data.category_id;
+    });
+}
+
+const saveItem = () => {
+    if (data.itemId == 0) {
+        itemForm.post(route('expenses.store'), {
+            onSuccess: () => editingItem.value = false,
+        });
+    } else {
+        itemForm.patch(route('expenses.update', data.itemId), {
+            onSuccess: () => editingItem.value = false,
+        });
+    }
+};
+
+const deleteItem = (id) => {
+    Inertia.delete(route('expenses.destroy', id), {
+        preserveScroll: true,
+        onBefore: () => confirm('Are you sure you want to delete this item?')
+    });
+};
+</script>

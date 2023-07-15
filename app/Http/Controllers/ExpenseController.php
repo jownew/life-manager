@@ -9,6 +9,8 @@ use App\Models\Currency;
 use App\Models\Expense;
 use App\Models\PaymentType;
 use Inertia\Inertia;
+use App\Exports\ExpensesExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ExpenseController extends Controller
 {
@@ -100,5 +102,13 @@ class ExpenseController extends Controller
         }
 
         return redirect()->back()->with('message', "$expense->name delete failed due an error.");
+    }
+
+    /**
+     * Export the expenses
+     */
+    public function export()
+    {
+        return Excel::download(new ExpensesExport, 'expenses.xlsx');
     }
 }

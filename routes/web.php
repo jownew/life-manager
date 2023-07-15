@@ -54,6 +54,7 @@ Route::middleware([
 
     Route::name('expenses.')->prefix('expenses')->group(function () {
         Route::get('/', [ExpenseController::class, 'index'])->name('index');
+        Route::get('/export/', [ExpenseController::class, 'export'])->name('export');
         Route::get('/{id}', [ExpenseController::class, 'show'])->name('show');
         Route::patch('/{id}', [ExpenseController::class, 'update'])->name('update');
         Route::post('/', [ExpenseController::class, 'store'])->name('store');
