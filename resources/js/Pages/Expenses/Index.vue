@@ -6,7 +6,7 @@
             </h2>
         </template>
 
-        <div class="md:py-3">
+        <div class="py-2 md:py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <div class="md:text-right text-center mx-2 my-2">
@@ -40,16 +40,17 @@
                                 <div class="md:table-cell md:text-center hidden md:visible">
                                     {{ i + 1 }}.
                                 </div>
-                                <div class="md:table-cell hidden md:visible">
+                                <div class="md:table-cell text-center md:text-left">
                                     {{ moment(item.transaction_date).format("DD MMM YYYY") }}
                                 </div>
-                                <div class="md:table-cell hidden md:visible">
+                                <div class="md:table-cell text-center md:text-left">
                                     {{ item.name }}
                                 </div>
                                 <div class="md:table-cell hidden md:visible text-center">
                                     {{ item.currency.code }}
                                 </div>
-                                <div class="md:table-cell hidden md:visible text-right px-5">
+                                <div class="md:table-cell text-center md:text-left md:px-5">
+                                    <span class="md:hidden">{{ item.currency.symbol }}</span>
                                     {{
                                         item.amount.toLocaleString('en-US', {
                                             minimumFractionDigits: 2,
