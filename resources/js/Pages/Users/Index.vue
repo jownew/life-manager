@@ -8,7 +8,7 @@
 
     <div class="py-2 md:py-12">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+        <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-5">
           <div class="md:text-right text-center mx-2">
             <PrimaryButton class="my-1" @click="editItem(0)" :class="{ 'opacity-25': itemForm.processing }"
               :disabled="itemForm.processing">
@@ -38,10 +38,10 @@
                 <div class="md:table-cell md:text-center hidden md:visible">
                   {{ i + 1 }}.
                 </div>
-                <div class="md:table-cell hidden md:visible">
+                <div class="md:table-cell text-center md:text-left">
                   {{ item.name }}
                 </div>
-                <div class="md:table-cell hidden md:visible text-center">
+                <div class="md:table-cell text-center md:text-left">
                   {{ item.email }}
                 </div>
                 <div class="md:table-cell hidden md:visible text-right">

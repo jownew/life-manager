@@ -9,13 +9,13 @@
     <div class="py-2 md:py-12">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-5">
-          <div class="block w-1/2 float-left p-3">
-            <label class="flex items-center">
-              <Checkbox :checked="props.showAll" @click="getItems()" />
-              <span class="ml-2 text-sm text-gray-600">Show All</span>
-            </label>
-          </div>
-          <div class="md:text-right md:w-1/3 text-center mx-2 float-right">
+          <div class="md:block hidden float-left">
+              <label class="flex items-center">
+                <Checkbox :checked="props.showAll" @click="getItems()" />
+                <span class="ml-2 text-sm text-gray-600">Show All</span>
+              </label>
+            </div>
+          <div class="md:text-right text-center mx-2 my-2">
             <PrimaryButton class="my-1" @click="editItem()" :class="{ 'opacity-25': itemForm.processing }"
               :disabled="itemForm.processing">
               New Event
@@ -50,17 +50,17 @@
                 <div class="md:table-cell md:text-center hidden md:visible">
                   {{ i + 1 }}.
                 </div>
-                <div class="md:table-cell hidden md:visible">
+                <div class="md:table-cell md:text-left text-center">
                   {{ item.title }}
                   <span class="bg-green-100 text-green-800 px-2.5 py-0.5 rounded-lg text-xs"
                     v-if="item.is_owed === 0">I</span>
                   <span class="bg-red-100 text-red-800 px-2.5 py-0.5 rounded-lg text-xs"
                     v-if="item.is_owed === 1">E</span>
                 </div>
-                <div class="md:table-cell hidden md:visible text-center">
+                <div class="md:table-cell text-center">
                   {{ item.days }}
                 </div>
-                <div class="md:table-cell hidden md:visible text-center">
+                <div class="md:table-cell text-center">
                   {{ moment(item.event_date).format("DD MMM YYYY") }}
                 </div>
                 <div class="md:table-cell hidden md:visible text-center">
