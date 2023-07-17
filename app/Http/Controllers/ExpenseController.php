@@ -43,7 +43,13 @@ class ExpenseController extends Controller
                 'amount' => ['required'],
                 'transaction_date' => ['required'],
                 'currency_id' => ['required'],
+                'category_id' => ['required'],
                 'payment_type_id' => ['required'],
+            ],
+            [
+                'name.required' => 'Please enter a valid item name.',
+                'amount.required' => 'Please enter a valid amount.',
+                'category_id.required' => 'Please select a category.',
             ])
         );
 
@@ -80,7 +86,19 @@ class ExpenseController extends Controller
     {
         $expense = Expense::findOrFail($id);
 
-        $expense->update($request->all());
+        $expense->update($request->validate([
+            'name' => ['required'],
+            'amount' => ['required'],
+            'transaction_date' => ['required'],
+            'currency_id' => ['required'],
+            'category_id' => ['required'],
+            'payment_type_id' => ['required'],
+        ],
+        [
+            'name.required' => 'Please enter a valid item name.',
+            'amount.required' => 'Please enter a valid amount.',
+            'category_id.required' => 'Please select a category.',
+        ]));
 
         Category::addCategory($expense->id, $request->category);
 

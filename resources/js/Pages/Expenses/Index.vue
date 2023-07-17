@@ -113,6 +113,7 @@
                 category.name
               }}</option>
             </select>
+            <InputError :message="itemForm.errors.category_id" class="mt-2" />
           </div>
           <div class="col-span-6 sm:col-span-4">
             <InputLabel for="transaction_date" value="Date" />
