@@ -238,6 +238,27 @@ const logout = () => {
                         <ResponsiveNavLink :href="route('dashboard.index')" :active="route().current('dashboard.index')">
                             Dashboard
                         </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('events.index')" :active="route().current('events.index')">
+                            Events
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('expenses.index')" :active="route().current('expenses.index')">
+                            Expenses
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('categories.index')" :active="route().current('categories.index')">
+                            Categories
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('currencies.index')"
+                            :active="route().current('currencies.index')">
+                            Currencies
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('paymentTypes.index')"
+                            :active="route().current('paymentTypes.index')">
+                            Payment Types
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('users.index')"
+                            :active="route().current('users.index')">
+                            Users
+                        </ResponsiveNavLink>
                     </div>
 
                     <!-- Responsive Settings Options -->
