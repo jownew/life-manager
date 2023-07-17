@@ -64,7 +64,7 @@
                 <div class="md:table-cell hidden md:visible px-5">
                   {{ item.payment_type.name }}
                 </div>
-                <div class="md:table-cell hidden md:visible text-right">
+                <div class="md:table-cell text-center md:text-right">
                   <SecondaryButton class="mx-2 my-1" @click="editItem(item.id)"
                     :class="{ 'opacity-25': itemForm.processing }" :disabled="itemForm.processing">
                     Edit
