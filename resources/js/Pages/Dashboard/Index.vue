@@ -6,21 +6,21 @@
       </h2>
     </template>
 
-    <div class="py-12">
+    <div class="py-2 md:py-12">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-          <div class="p-5 m-10 border w-1/2">
-            <div class="md:table w-full">
-              <div class="md:table-header-group md:display hidden">
+          <div class="p-5 md:m-10 border w-full md:w-1/2">
+            <div class="table w-full">
+              <div class="table-header-group">
                 <div class="table-row">
-                  <div class="table-cell text-left">Category</div>
+                  <div class="table-cell text-left pb-3">Category</div>
                   <div class="table-cell text-right">Budget</div>
                   <div class="table-cell text-right">Amount</div>
                 </div>
               </div>
-              <div class="md:table-row-group">
+              <div class="table-row-group">
                 <div class="table-row" v-for="category in categories">
-                  <div class="table-cell text-left">{{ category.name }}</div>
+                  <div class="table-cell text-left pb-2">{{ category.name }}</div>
                   <div class="table-cell text-right">
                     {{
                       category.budget.toLocaleString('en-US', {
