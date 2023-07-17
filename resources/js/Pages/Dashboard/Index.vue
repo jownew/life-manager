@@ -40,7 +40,14 @@
                 </div>
                 <div class="table-row">
                   <div class="table-cell text-left">Total</div>
-                  <div class="table-cell text-right">{{ budgetTotal }}</div>
+                  <div class="table-cell text-right">
+                    {{
+                      budgetTotal.toLocaleString('en-US', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                      })
+                    }}
+                  </div>
                   <div class="table-cell text-right">
                     {{
                       sum.toLocaleString('en-US', {
