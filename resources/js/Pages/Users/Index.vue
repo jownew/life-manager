@@ -85,6 +85,13 @@
               v-model="itemForm.email" type="email" id="email" />
             <InputError :message="itemForm.errors.email" class="mt-2" />
           </div>
+          <div class="col-span-6 sm:col-span-4">
+            <InputLabel for="password" value="Password" />
+            <input
+              class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
+              v-model="itemForm.password" type="password" id="password" />
+            <InputError :message="itemForm.errors.password" class="mt-2" />
+          </div>
         </div>
       </template>
 
@@ -123,6 +130,7 @@ const props = defineProps({
 const itemForm = useForm({
   name: '',
   email: '',
+  password: '',
 });
 
 const data = reactive({
@@ -153,12 +161,14 @@ const editItem = (id) => {
 const resetItem = () => {
   itemForm.name = "";
   itemForm.email = "";
+  itemForm.password = "";
 }
 
 const getItem = (id) => {
   return axios.get(route('users.show', id)).then(response => {
     itemForm.name = response.data.name;
     itemForm.email = response.data.email;
+    itemForm.password = "";
   });
 }
 
