@@ -40,6 +40,7 @@ class ExpenseController extends Controller
         $expense = Expense::create(
             $request->validate([
                 'name' => ['required'],
+                'description' => [],
                 'amount' => ['required'],
                 'transaction_date' => ['required'],
                 'currency_id' => ['required'],
@@ -88,6 +89,7 @@ class ExpenseController extends Controller
 
         $expense->update($request->validate([
             'name' => ['required'],
+            'description' => [],
             'amount' => ['required'],
             'transaction_date' => ['required'],
             'currency_id' => ['required'],

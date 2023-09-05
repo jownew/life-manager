@@ -187,6 +187,7 @@ const props = defineProps({
 
 const itemForm = useForm({
   name: '',
+  description: '',
   currency_id: '',
   payment_type_id: '',
   amount: null,
@@ -215,7 +216,6 @@ const editItem = (id) => {
 
   editingItemText.value = id == 0 ? 'New' : 'Edit'
   editingItem.value = true;
-  // nameInput.value.focus()
   nextTick(() => { nameInput.value.focus() });
 };
 
@@ -224,7 +224,8 @@ const exportItems = () => {
 }
 
 const resetItem = () => {
-  itemForm.name = "";
+  itemForm.name = '';
+  itemForm.description = '';
   itemForm.currency_id = props.currencies[0]?.id;
   itemForm.payment_type_id = props.paymentTypes[0]?.id;
   itemForm.amount = null;
@@ -235,6 +236,7 @@ const resetItem = () => {
 const getItem = (id) => {
   return axios.get(route('expenses.show', id)).then(response => {
     itemForm.name = response.data.name;
+    itemForm.description = response.data.description;
     itemForm.currency_id = response.data.currency_id;
     itemForm.payment_type_id = response.data.payment_type_id;
     itemForm.amount = response.data.amount;
