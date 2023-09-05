@@ -138,6 +138,27 @@ class EventController extends Controller
     }
 
     /**
+     * Update the specified resource in storage.
+     *
+     * @param  \App\Http\Requests\UpdateEventRequest  $request
+     * @param  \App\Models\Event  $event
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function changeStatus(UpdateEventRequest $request, string $id)
+    {
+        $request->validate([
+            'status' => ['required', 'max:20'],
+        ]);
+
+        $event = Event::findOrFail($id);
+        if ($event->update($request->all())) {
+            return redirect()->back()->with('message', "Event $event->title status updated successfully");
+        };
+
+        return redirect()->back()->with('message', "There was an error updating the status of the event $event->title.");
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)

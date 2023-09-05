@@ -67,13 +67,22 @@
                   {{ item.status }}
                 </div>
                 <div class="md:table-cell hidden md:visible text-right">
+
+                  <SecondaryButton class="mx-2 my-1" @click="changeStatus(item.id, 'active')" v-if="item.status == 'completed'"
+                    :class="{ 'opacity-25': itemForm.processing }" :disabled="itemForm.processing">
+                    <Icon icon="carbon:checkbox-checked" class="w-5 h-5" />
+                  </SecondaryButton>
+                  <SecondaryButton class="mx-2 my-1" @click="changeStatus(item.id, 'completed')" v-else
+                    :class="{ 'opacity-25': itemForm.processing }" :disabled="itemForm.processing">
+                    <Icon icon="carbon:checkbox" class="w-5 h-5" />
+                  </SecondaryButton>
                   <SecondaryButton class="mx-2 my-1" @click="editItem(item.id)"
                     :class="{ 'opacity-25': itemForm.processing }" :disabled="itemForm.processing">
-                    Edit
+                    <Icon icon="carbon:edit" class="w-5 h-5" />
                   </SecondaryButton>
                   <DangerButton class="mx-2 my-1" @click="deleteItem(item.id)"
                     :class="{ 'opacity-25': itemForm.processing }" :disabled="itemForm.processing">
-                    Delete
+                    <Icon icon="carbon:delete" class="w-5 h-5" />
                   </DangerButton>
                 </div>
               </div>
@@ -104,6 +113,7 @@ import { useForm } from '@inertiajs/inertia-vue3';
 import { reactive } from 'vue';
 import EventForm from './Partials/EventForm.vue';
 import Checkbox from '@/Components/Checkbox.vue';
+import { Icon } from '@iconify/vue';
 
 const props = defineProps({
   items: Object,
@@ -129,6 +139,13 @@ const editItem = (id = '') => {
   data.itemId = id;
   data.isEditModalOpen = true;
 }
+
+const changeStatus = (id, newStatus) => {
+  Inertia.post(route('events.changeStatus', id), {status: newStatus}, {
+    preserveScroll: true,
+    onBefore: () => confirm(`Set this item to ${newStatus}?`)
+  });
+};
 
 const deleteItem = (id) => {
   Inertia.delete(route('events.destroy', id), {

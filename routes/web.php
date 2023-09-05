@@ -80,6 +80,7 @@ Route::middleware([
     Route::prefix('users')->resource('users', UserController::class);
     Route::name('events.')->prefix('events')->group(function () {
         Route::get('/all', [EventController::class, 'showAll'])->name('showAll');
+        Route::post('/{id}/change-status', [EventController::class, 'changeStatus'])->name('changeStatus');
     });
     Route::prefix('events')->resource('events', EventController::class);
 });
