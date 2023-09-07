@@ -11,6 +11,7 @@ use App\Models\PaymentType;
 use Inertia\Inertia;
 use App\Exports\ExpensesExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Http\Request;
 
 class ExpenseController extends Controller
 {
@@ -122,6 +123,21 @@ class ExpenseController extends Controller
         }
 
         return redirect()->back()->with('message', "$expense->name delete failed due an error.");
+    }
+
+    /**
+     * Remove the selected resources from storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroyMany(Request $request)
+    {
+        if (Expense::whereIn('id', $request->items)->delete()) {
+            return redirect()->back()->with('message', "Selected items deleted successfully");
+        }
+
+        return redirect()->back()->with('message', "There was an error in deleting the selected items");
     }
 
     /**

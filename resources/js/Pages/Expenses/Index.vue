@@ -19,10 +19,22 @@
               :disabled="itemForm.processing">
               New Expense
             </PrimaryButton>
+            <DangerButton class="ml-2" @click="deleteSelectedItems" :class="{ 'opacity-25': itemForm.processing }"
+              v-if="data.selectedItems.length > 0"
+              :disabled="itemForm.processing">
+              Delete Selected
+            </DangerButton>
           </div>
           <div class="md:table w-full">
             <div class="md:table-header-group md:display hidden">
               <div class="table-row">
+                <div class="table-cell text-center">
+                  <input
+                    type="checkbox"
+                    @click="toggleAll()"
+                    :checked="data.selectedItems.length == items.data.length"
+                  >
+                </div>
                 <div
                   class="table-cell text-left border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
                 </div>
@@ -37,6 +49,14 @@
             <div class="md:table-row-group">
               <div v-for="item, i in items.data" :key="item.id"
                 class="md:table-row odd:bg-white even:bg-gray-200 border py-2 my-2">
+                <div class="md:table-cell md:text-center hidden md:visible text-center">
+                  <input
+                    type="checkbox"
+                    class="mx-1"
+                    @click="toggleSelection(item.id)"
+                    :checked="data.selectedItems.includes(item.id)"
+                  >
+                </div>
                 <div class="md:table-cell md:text-center hidden md:visible">
                   {{ i + 1 }}.
                 </div>
@@ -185,6 +205,11 @@ const props = defineProps({
   categories: Array,
 });
 
+const data = reactive({
+  itemId: 0,
+  selectedItems: [],
+});
+
 const itemForm = useForm({
   name: '',
   description: '',
@@ -193,10 +218,6 @@ const itemForm = useForm({
   amount: null,
   transaction_date: null,
   category_id: null,
-});
-
-const data = reactive({
-  itemId: 0
 });
 
 const editingItem = ref(false);
@@ -258,9 +279,41 @@ const saveItem = () => {
 };
 
 const deleteItem = (id) => {
+  clearSelectedItems();
   Inertia.delete(route('expenses.destroy', id), {
     preserveScroll: true,
-    onBefore: () => confirm('Are you sure you want to delete this item?')
+    onBefore: () => confirm('Are you sure you want to delete this item?'),
   });
 };
+
+const deleteSelectedItems = () => {
+  Inertia.post(route('expenses.destroyMany'), {
+      items: data.selectedItems,
+      _method: 'DELETE',
+    }, {
+    preserveScroll: true,
+    onBefore: () => confirm('Are you sure you want to delete the selected item(s)?'),
+    onSuccess: clearSelectedItems(),
+  });
+};
+
+const toggleSelection = (selectedId) => {
+	if (data.selectedItems.indexOf(selectedId) === -1) {
+		data.selectedItems.push(selectedId);
+	} else {
+    data.selectedItems = data.selectedItems.filter(id => id !== selectedId);
+	}
+}
+
+const toggleAll = () => {
+  if (data.selectedItems.length == props.items.data.length) {
+    clearSelectedItems();
+  } else {
+    data.selectedItems = props.items.data.map(item => item.id);
+  }
+}
+
+const clearSelectedItems = () => {
+  data.selectedItems = [];
+}
 </script>

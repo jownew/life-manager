@@ -59,6 +59,7 @@ Route::middleware([
         Route::patch('/{id}', [ExpenseController::class, 'update'])->name('update');
         Route::post('/', [ExpenseController::class, 'store'])->name('store');
         Route::delete('/{id}', [ExpenseController::class, 'destroy'])->name('destroy');
+        Route::delete('/', [ExpenseController::class, 'destroyMany'])->name('destroyMany');
     });
 
     Route::name('currencies.')->prefix('currencies')->group(function () {
