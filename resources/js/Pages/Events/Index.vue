@@ -48,7 +48,7 @@
               <div v-for="item, i in items.data" :key="item.id"
                 class="md:table-row odd:bg-white even:bg-gray-200 border py-2 my-2">
                 <div class="md:table-cell md:text-center hidden md:visible">
-                  {{ i + 1 }}.
+                  {{ i + 1 + ((props.items.current_page - 1) * props.items.per_page) }}.
                 </div>
                 <div class="md:table-cell md:text-left text-center">
                   {{ item.title }}

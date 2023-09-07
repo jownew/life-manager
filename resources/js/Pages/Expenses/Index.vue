@@ -47,7 +47,7 @@
               </div>
             </div>
             <div class="md:table-row-group">
-              <div v-for="item, i in items.data" :key="item.id"
+              <div v-for="item, i in props.items.data" :key="item.id"
                 class="md:table-row odd:bg-white even:bg-gray-200 border py-2 my-2">
                 <div class="md:table-cell md:text-center hidden md:visible text-center">
                   <input
@@ -58,7 +58,7 @@
                   >
                 </div>
                 <div class="md:table-cell md:text-center hidden md:visible">
-                  {{ i + 1 }}.
+                  {{ i + 1 + ((props.items.current_page - 1) * props.items.per_page) }}.
                 </div>
                 <div class="md:table-cell text-center md:text-left">
                   {{ moment(item.transaction_date).format("DD MMM YYYY") }}
@@ -181,6 +181,10 @@
       </template>
     </DialogModal>
   </AppLayout>
+  <pre>
+
+    {{ props.items }}
+  </pre>
 </template>
 
 <script setup>
