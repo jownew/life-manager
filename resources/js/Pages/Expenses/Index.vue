@@ -181,10 +181,6 @@
       </template>
     </DialogModal>
   </AppLayout>
-  <pre>
-
-    {{ props.items }}
-  </pre>
 </template>
 
 <script setup>
