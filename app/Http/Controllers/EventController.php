@@ -7,6 +7,7 @@ use App\Http\Requests\StoreEventRequest;
 use App\Http\Requests\UpdateEventRequest;
 use App\Models\Currency;
 use App\Models\Event;
+use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
@@ -170,5 +171,20 @@ class EventController extends Controller
         }
 
         return redirect()->back()->with('message', "$event->title delete failed due an error.");
+    }
+
+    /**
+     * Remove the selected resources from storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroyMany(Request $request)
+    {
+        if (Event::whereIn('id', $request->items)->delete()) {
+            return redirect()->back()->with('message', "Selected items deleted successfully");
+        }
+
+        return redirect()->back()->with('message', "There was an error in deleting the selected items");
     }
 }

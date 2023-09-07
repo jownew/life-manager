@@ -82,6 +82,7 @@ Route::middleware([
     Route::name('events.')->prefix('events')->group(function () {
         Route::get('/all', [EventController::class, 'showAll'])->name('showAll');
         Route::post('/{id}/change-status', [EventController::class, 'changeStatus'])->name('changeStatus');
+        Route::delete('/', [EventController::class, 'destroyMany'])->name('destroyMany');
     });
     Route::prefix('events')->resource('events', EventController::class);
 });
