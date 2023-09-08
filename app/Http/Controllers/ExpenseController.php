@@ -25,7 +25,6 @@ class ExpenseController extends Controller
         return Inertia::render('Expenses/Index', [
             'items' => Expense::with(['category', 'Currency', 'PaymentType'])->orderByDesc('transaction_date')->paginate(),
             'currencies' => Currency::all(),
-            'paymentTypes' => PaymentType::all(),
             'categories' => Category::all(),
         ]);
     }

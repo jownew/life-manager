@@ -155,7 +155,7 @@
             <InputLabel for="payment_type_id" value="Payment Type" />
             <select id="payment_type_id" v-model="itemForm.payment_type_id"
               class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
-              <option :key="paymentType.id" :value="paymentType.id" v-for="paymentType in props.paymentTypes">{{
+              <option :key="paymentType.id" :value="paymentType.id" v-for="paymentType in data.paymentTypes">{{
                 paymentType.name }}</option>
             </select>
           </div>
@@ -201,13 +201,13 @@ import TextInput from '@/Components/TextInput.vue';
 const props = defineProps({
   items: Object,
   currencies: Array,
-  paymentTypes: Array,
   categories: Array,
 });
 
 const data = reactive({
   itemId: 0,
   selectedItems: [],
+  paymentTypes: [],
 });
 
 const itemForm = useForm({
@@ -225,6 +225,8 @@ const editingItemText = ref('Edit');
 const nameInput = ref(null);
 
 const editItem = (id) => {
+  getPaymentTypes();
+
   data.itemId = id;
 
   itemForm.clearErrors();
@@ -248,7 +250,7 @@ const resetItem = () => {
   itemForm.name = '';
   itemForm.description = '';
   itemForm.currency_id = props.currencies[0]?.id;
-  itemForm.payment_type_id = props.paymentTypes[0]?.id;
+  itemForm.payment_type_id = data.paymentTypes[0]?.id;
   itemForm.amount = null;
   itemForm.category_id = '';
   itemForm.transaction_date = moment().format("YYYY-MM-DD");
@@ -263,6 +265,12 @@ const getItem = (id) => {
     itemForm.amount = response.data.amount;
     itemForm.transaction_date = response.data.transaction_date;
     itemForm.category_id = response.data.category_id;
+  });
+}
+
+const getPaymentTypes = () => {
+  return axios.get(route('paymentTypes.index')).then(response => {
+    data.paymentTypes = response.data;
   });
 }
 

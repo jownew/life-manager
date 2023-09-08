@@ -12,12 +12,18 @@ class PaymentTypeController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Inertia\Response
+     * @return \Inertia\Response|\Illuminate\Database\Eloquent\Collection
      */
     public function index()
     {
+        $paymentTypes = PaymentType::orderBy('name')->get();
+
+        if (request()->wantsJson()) {
+            return $paymentTypes;
+        }
+
         return Inertia::render('PaymentTypes/Index', [
-            'items' => PaymentType::all()
+            'items' => $paymentTypes,
         ]);
     }
 
@@ -88,7 +94,7 @@ class PaymentTypeController extends Controller
     public function update(UpdatePaymentTypeRequest $request, string $id)
     {
         $paymentType = PaymentType::find($id);
-        
+
         $paymentType->update($request->all());
 
         return redirect()->back()->with('message', "$paymentType->name updated successfully");
@@ -111,7 +117,7 @@ class PaymentTypeController extends Controller
         if ($paymentType->delete()) {
             return redirect()->back()->with('message', "$paymentType->name deleted successfully");
         }
-        
+
         return redirect()->back()->with('message', "$paymentType->name delete failed due an error.");
     }
 }
