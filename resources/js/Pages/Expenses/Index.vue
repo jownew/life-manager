@@ -87,11 +87,11 @@
                 <div class="md:table-cell text-center md:text-right">
                   <SecondaryButton class="mx-2 my-1" @click="editItem(item.id)"
                     :class="{ 'opacity-25': itemForm.processing }" :disabled="itemForm.processing">
-                    Edit
+                    <Icon icon="carbon:edit" class="w-5 h-5" />
                   </SecondaryButton>
                   <DangerButton class="mx-2 my-1" @click="deleteItem(item.id)"
                     :class="{ 'opacity-25': itemForm.processing }" :disabled="itemForm.processing">
-                    Delete
+                    <Icon icon="carbon:trash-can" class="w-5 h-5" />
                   </DangerButton>
                 </div>
               </div>
@@ -197,6 +197,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import { nextTick, reactive, ref } from 'vue';
 import InputError from '@/Components/InputError.vue';
 import TextInput from '@/Components/TextInput.vue';
+import { Icon } from '@iconify/vue';
 
 const props = defineProps({
   items: Object,

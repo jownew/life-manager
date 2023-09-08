@@ -102,7 +102,7 @@
                   </SecondaryButton>
                   <DangerButton class="mx-2 my-1" @click="deleteItem(item.id)"
                     :class="{ 'opacity-25': itemForm.processing }" :disabled="itemForm.processing">
-                    <Icon icon="carbon:delete" class="w-5 h-5" />
+                    <Icon icon="carbon:trash-can" class="w-5 h-5" />
                   </DangerButton>
                 </div>
               </div>
