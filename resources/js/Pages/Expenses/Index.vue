@@ -11,17 +11,15 @@
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-5">
           <div class="md:text-right text-center mx-2 my-2">
             <a :href="route('expenses.export')">
-              <SecondaryButton class="mr-2" :class="{ 'opacity-25': itemForm.processing }">
+              <SecondaryButton class="mr-2">
                 Export
               </SecondaryButton>
             </a>
-            <PrimaryButton @click="editItem(0)" :class="{ 'opacity-25': itemForm.processing }"
-              :disabled="itemForm.processing">
+            <PrimaryButton @click="editItem()">
               New Expense
             </PrimaryButton>
-            <DangerButton class="ml-2" @click="deleteSelectedItems" :class="{ 'opacity-25': itemForm.processing }"
-              v-if="data.selectedItems.length > 0"
-              :disabled="itemForm.processing">
+            <DangerButton class="ml-2" @click="deleteSelectedItems"
+              v-if="data.selectedItems.length > 0">
               Delete Selected
             </DangerButton>
           </div>
@@ -85,12 +83,10 @@
                   {{ item.payment_type.name }}
                 </div>
                 <div class="md:table-cell text-center md:text-right">
-                  <SecondaryButton class="mx-2 my-1" @click="editItem(item.id)"
-                    :class="{ 'opacity-25': itemForm.processing }" :disabled="itemForm.processing">
+                  <SecondaryButton class="mx-2 my-1" @click="editItem(item.id)">
                     <Icon icon="carbon:edit" class="w-5 h-5" />
                   </SecondaryButton>
-                  <DangerButton class="mx-2 my-1" @click="deleteItem(item.id)"
-                    :class="{ 'opacity-25': itemForm.processing }" :disabled="itemForm.processing">
+                  <DangerButton class="mx-2 my-1" @click="deleteItem(item.id)">
                     <Icon icon="carbon:trash-can" class="w-5 h-5" />
                   </DangerButton>
                 </div>
@@ -105,81 +101,8 @@
         </div>
       </div>
     </div>
-    <DialogModal :show="editingItem" @close="editingItem = false">
-      <template #title>
-        {{ editingItemText }} Item
-      </template>
-
-      <template #content>
-        <div class="grid gap-6" @keyup.enter="saveItem">
-          <div class="col-span-6 sm:col-span-4">
-            <InputLabel for="name" value="Name" />
-            <TextInput id="name" v-model="itemForm.name" type="text" class="mt-1 block w-full" autofocus
-              ref="nameInput" />
-            <InputError :message="itemForm.errors.name" class="mt-2" />
-          </div>
-          <div class="col-span-6 sm:col-span-4">
-            <InputLabel for="amount" value="Amount" />
-            <input
-              class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
-              v-model="itemForm.amount" type="number" id="amount" />
-            <InputError :message="itemForm.errors.amount" class="mt-2" />
-          </div>
-          <div class="col-span-6 sm:col-span-4">
-            <InputLabel for="category_id" value="Category" />
-            <select id="category_id" v-model="itemForm.category_id"
-              class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
-              <option :key="category.id" :value="category.id" v-for="category in props.categories">{{
-                category.name
-              }}</option>
-            </select>
-            <InputError :message="itemForm.errors.category_id" class="mt-2" />
-          </div>
-          <div class="col-span-6 sm:col-span-4">
-            <InputLabel for="transaction_date" value="Date" />
-            <input
-              class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
-              v-model="itemForm.transaction_date" type="date" id="transaction_date" />
-            <InputError :message="itemForm.errors.transaction_date" class="mt-2" />
-          </div>
-          <div class="col-span-6 sm:col-span-4">
-            <InputLabel for="currency_id" value="Currency" />
-            <select id="currency_id" v-model="itemForm.currency_id"
-              class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
-              <option :key="currency.id" :value="currency.id" v-for="currency in props.currencies">{{
-                currency.name
-              }}</option>
-            </select>
-          </div>
-          <div class="col-span-6 sm:col-span-4">
-            <InputLabel for="payment_type_id" value="Payment Type" />
-            <select id="payment_type_id" v-model="itemForm.payment_type_id"
-              class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
-              <option :key="paymentType.id" :value="paymentType.id" v-for="paymentType in data.paymentTypes">{{
-                paymentType.name }}</option>
-            </select>
-          </div>
-          <div class="col-span-6 sm:col-span-4">
-            <InputLabel for="description" value="Notes" />
-            <textarea name="description" v-model="itemForm.description" id="description"
-              class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
-              cols="30" rows="5"></textarea>
-            <InputError :message="itemForm.errors.description" class="mt-2" />
-          </div>
-        </div>
-      </template>
-
-      <template #footer>
-        <SecondaryButton @click="editingItem = false">
-          Nevermind
-        </SecondaryButton>
-
-        <PrimaryButton class="ml-2" @click="saveItem" :class="{ 'opacity-25': itemForm.processing }"
-          :disabled="itemForm.processing">
-          Save
-        </PrimaryButton>
-      </template>
-    </DialogModal>
+    <ExpenseForm :isOpen="data.isEditModalOpen" :itemId="data.itemId" :currencies="currencies"
+      @close="closeModal" />
   </AppLayout>
 </template>
 
@@ -187,17 +110,13 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import moment from "moment";
 import NavLink from '@/Components/NavLink.vue';
-import DialogModal from '@/Components/DialogModal.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import DangerButton from '@/Components/DangerButton.vue';
 import { Inertia } from '@inertiajs/inertia';
-import { useForm } from '@inertiajs/inertia-vue3';
-import InputLabel from '@/Components/InputLabel.vue';
-import { nextTick, reactive, ref } from 'vue';
-import InputError from '@/Components/InputError.vue';
-import TextInput from '@/Components/TextInput.vue';
+import { reactive } from 'vue';
 import { Icon } from '@iconify/vue';
+import ExpenseForm from './Partials/ExpenseForm.vue';
 
 const props = defineProps({
   items: Object,
@@ -206,85 +125,14 @@ const props = defineProps({
 });
 
 const data = reactive({
-  itemId: 0,
+  itemId: '',
   selectedItems: [],
   paymentTypes: [],
 });
 
-const itemForm = useForm({
-  name: '',
-  description: '',
-  currency_id: '',
-  payment_type_id: '',
-  amount: null,
-  transaction_date: null,
-  category_id: null,
-});
-
-const editingItem = ref(false);
-const editingItemText = ref('Edit');
-const nameInput = ref(null);
-
-const editItem = (id) => {
-  getPaymentTypes();
-
+const editItem = (id = '') => {
   data.itemId = id;
-
-  itemForm.clearErrors();
-
-  if (id == 0) {
-    resetItem();
-  } else {
-    getItem(id);
-  }
-
-  editingItemText.value = id == 0 ? 'New' : 'Edit'
-  editingItem.value = true;
-  nextTick(() => { nameInput.value.focus() });
-};
-
-const exportItems = () => {
-  return axios.get(route('expenses.export'));
-}
-
-const resetItem = () => {
-  itemForm.name = '';
-  itemForm.description = '';
-  itemForm.currency_id = props.currencies[0]?.id;
-  itemForm.payment_type_id = data.paymentTypes[0]?.id;
-  itemForm.amount = null;
-  itemForm.category_id = '';
-  itemForm.transaction_date = moment().format("YYYY-MM-DD");
-}
-
-const getItem = (id) => {
-  return axios.get(route('expenses.show', id)).then(response => {
-    itemForm.name = response.data.name;
-    itemForm.description = response.data.description;
-    itemForm.currency_id = response.data.currency_id;
-    itemForm.payment_type_id = response.data.payment_type_id;
-    itemForm.amount = response.data.amount;
-    itemForm.transaction_date = response.data.transaction_date;
-    itemForm.category_id = response.data.category_id;
-  });
-}
-
-const getPaymentTypes = () => {
-  return axios.get(route('paymentTypes.index')).then(response => {
-    data.paymentTypes = response.data;
-  });
-}
-
-const saveItem = () => {
-  if (data.itemId == 0) {
-    itemForm.post(route('expenses.store'), {
-      onSuccess: () => editingItem.value = false,
-    });
-  } else {
-    itemForm.patch(route('expenses.update', data.itemId), {
-      onSuccess: () => editingItem.value = false,
-    });
-  }
+  data.isEditModalOpen = true;
 };
 
 const deleteItem = (id) => {
@@ -312,6 +160,10 @@ const toggleSelection = (selectedId) => {
 	} else {
     data.selectedItems = data.selectedItems.filter(id => id !== selectedId);
 	}
+}
+
+const closeModal = () => {
+  data.isEditModalOpen = false;
 }
 
 const toggleAll = () => {

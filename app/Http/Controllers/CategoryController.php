@@ -17,8 +17,14 @@ class CategoryController extends Controller
      */
     public function index()
     {
+        $categories = Category::orderBy('name')->get();
+
+        if (request()->wantsJson()) {
+            return $categories;
+        }
+
         return Inertia::render('Categories/Index', [
-            'items' => Category::all()
+            'items' => $categories,
         ]);
     }
 
