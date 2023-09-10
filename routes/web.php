@@ -41,7 +41,7 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::name('dashboard.')->prefix('dashboard')->group(function () {
-        Route::get('/', [DashboardController::class, 'index'])->name('index');
+        Route::get('/{date?}', [DashboardController::class, 'index'])->name('index');
     });
 
     Route::name('paymentTypes.')->prefix('payment-types')->group(function () {
@@ -86,4 +86,3 @@ Route::middleware([
     });
     Route::prefix('events')->resource('events', EventController::class);
 });
-

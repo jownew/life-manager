@@ -9,7 +9,20 @@
     <div class="py-2 md:py-12">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-          <div class="p-5 md:m-10 border w-full md:w-1/2">
+          <div class="p-5 md:mx-10 w-full md:w-1/2 text-center">
+            <Link :href="route('dashboard.index', props.previousMonth)">
+            <SecondaryButton class="mr-5">
+              Previous Month
+            </SecondaryButton>
+          </Link>
+          {{ moment(props.date).format("DD MMM YYYY") }}
+          <Link :href="route('dashboard.index', props.nextMonth)">
+            <SecondaryButton class="ml-5">
+            Next Month
+            </SecondaryButton>
+          </Link>
+          </div>
+          <div class="p-5 md:mx-10 border w-full md:w-1/2">
             <div class="table w-full">
               <div class="table-header-group">
                 <div class="table-row">
@@ -68,10 +81,16 @@
 
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
+import moment from "moment";
+import { Link } from '@inertiajs/inertia-vue3';
+import SecondaryButton from '@/Components/SecondaryButton.vue';
 
 const props = defineProps({
   categories: Array,
-  expenses: Array
+  expenses: Array,
+  date: String,
+  previousMonth: String,
+  nextMonth: String,
 });
 
 const sum = props.expenses.reduce((accumulator, currentValue) => {
