@@ -11,34 +11,43 @@
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
           <div class="p-5 md:mx-10 w-full md:w-1/2 text-center">
             <div class="grid grid-cols-3 justify-items-center items-center">
-            <Link :href="route('dashboard.index', props.previousMonth)">
-            <SecondaryButton class="mr-5">
-              <Icon icon="carbon:caret-left" class="w-5 h-5" />
-              {{ moment(props.previousMonth).format("MMM") }}
-            </SecondaryButton>
-            </Link>
+              <Link :href="route('dashboard.index', props.previousMonth)">
+              <SecondaryButton class="mr-5">
+                <Icon icon="carbon:caret-left" class="w-5 h-5" />
+                {{ moment(props.previousMonth).format("MMM") }}
+              </SecondaryButton>
+              </Link>
               {{ moment(props.date).format("MMM YYYY") }}
-            <Link :href="route('dashboard.index', props.nextMonth)">
-            <SecondaryButton class="ml-5">
-              {{ moment(props.nextMonth).format("MMM") }}
-              <Icon icon="carbon:caret-right" class="w-5 h-5" />
-            </SecondaryButton>
-            </Link>
-          </div>
+              <Link :href="route('dashboard.index', props.nextMonth)">
+              <SecondaryButton class="ml-5">
+                {{ moment(props.nextMonth).format("MMM") }}
+                <Icon icon="carbon:caret-right" class="w-5 h-5" />
+              </SecondaryButton>
+              </Link>
+            </div>
           </div>
           <div class="p-5 md:mx-10 md:mb-10 border w-full md:w-1/2">
-            <div class="table w-full">
+            <div class="table border-collapse table-auto w-full text-sm">
               <div class="table-header-group">
                 <div class="table-row">
-                  <div class="table-cell text-left pb-3">Category</div>
-                  <div class="table-cell text-right">Budget</div>
-                  <div class="table-cell text-right">Amount</div>
+                  <div
+                    class="table-cell border-b dark:border-slate-600 font-medium p-2 pt-0 pb-3 text-slate-800 dark:text-slate-200 text-left">
+                    Category</div>
+                  <div
+                    class="table-cell border-b dark:border-slate-600 font-medium p-2 pl-8 pt-0 pb-3 text-slate-800 dark:text-slate-200 text-right">
+                    Budget</div>
+                  <div
+                    class="table-cell border-b dark:border-slate-600 font-medium p-2 pl-8 pt-0 pb-3 text-slate-800 dark:text-slate-200 text-right">
+                    Amount</div>
                 </div>
               </div>
               <div class="table-row-group">
                 <div class="table-row" v-for="category in categories">
-                  <div class="table-cell text-left pb-2">{{ category.name }}</div>
-                  <div class="table-cell text-right">
+                  <div
+                    class="table-cell border-b border-slate-100 dark:border-slate-700 p-2 pl-2 text-slate-800 dark:text-slate-400">
+                    {{ category.name }}</div>
+                  <div
+                    class="table-cell border-b border-slate-100 dark:border-slate-700 p-2 pl-2 text-slate-800 dark:text-slate-400 text-right">
                     {{
                       category.budget.toLocaleString('en-US', {
                         minimumFractionDigits: 2,
@@ -46,7 +55,8 @@
                       })
                     }}
                   </div>
-                  <div class="table-cell text-right">
+                  <div
+                    class="table-cell border-b border-slate-100 dark:border-slate-700 p-2 pl-2 text-slate-800 dark:text-slate-400 text-right">
                     {{
                       subTotals.find(st => st.category == category.name).total.toLocaleString('en-US', {
                         minimumFractionDigits: 2,
@@ -56,8 +66,11 @@
                   </div>
                 </div>
                 <div class="table-row">
-                  <div class="table-cell text-left">Total</div>
-                  <div class="table-cell text-right">
+                  <div
+                    class="table-cell border-b border-slate-100 dark:border-slate-700 p-2 pl-2 text-slate-800 dark:text-slate-400 font-bold">
+                    Total</div>
+                  <div
+                    class="table-cell border-b border-slate-100 dark:border-slate-700 p-2 pl-2 text-slate-800 dark:text-slate-400 text-right font-bold">
                     {{
                       budgetTotal.toLocaleString('en-US', {
                         minimumFractionDigits: 2,
@@ -65,7 +78,8 @@
                       })
                     }}
                   </div>
-                  <div class="table-cell text-right">
+                  <div
+                    class="table-cell border-b border-slate-100 dark:border-slate-700 p-2 pl-2 text-slate-800 dark:text-slate-400 text-right font-bold">
                     {{
                       sum.toLocaleString('en-US', {
                         minimumFractionDigits: 2,
