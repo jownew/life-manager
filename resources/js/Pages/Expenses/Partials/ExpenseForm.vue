@@ -44,6 +44,7 @@
               currency.name
             }}</option>
           </select>
+          <InputError :message="form.errors.currency_id" class="mt-2" />
         </div>
         <div class="col-span-6 sm:col-span-4">
           <InputLabel for="payment_type_id" value="Payment Type" />
@@ -52,6 +53,7 @@
             <option :key="paymentType.id" :value="paymentType.id" v-for="paymentType in data.paymentTypes">{{
               paymentType.name }}</option>
           </select>
+          <InputError :message="form.errors.payment_type_id" class="mt-2" />
         </div>
         <div class="col-span-6 sm:col-span-4">
           <InputLabel for="description" value="Notes" />
