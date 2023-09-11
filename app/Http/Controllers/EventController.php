@@ -14,10 +14,13 @@ class EventController extends Controller
     /**
      * Display a listing of active events.
      */
-    public function index()
+    public function index(Request $request)
     {
         return Inertia::render('Events/Index', [
-            'items' => Event::orderBy('event_date')->where('status', 'active')->paginate(),
+            'items' => Event::orderBy('event_date')
+                ->where('status', 'active')
+                ->where('user_id', $request->user()->id)
+                ->paginate(),
             'currencies' => Currency::all(),
             'showAll' => false,
         ]);

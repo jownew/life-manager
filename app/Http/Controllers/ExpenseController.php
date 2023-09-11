@@ -20,10 +20,12 @@ class ExpenseController extends Controller
      *
      * @return \Inertia\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         return Inertia::render('Expenses/Index', [
-            'items' => Expense::with(['category', 'Currency', 'PaymentType'])->orderByDesc('transaction_date')->paginate(),
+            'items' => Expense::with(['category', 'Currency', 'PaymentType'])
+                ->where('user_id', $request->user()->id)
+                ->orderByDesc('transaction_date')->paginate(),
             'currencies' => Currency::all(),
             'categories' => Category::all(),
         ]);

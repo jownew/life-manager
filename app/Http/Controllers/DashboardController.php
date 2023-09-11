@@ -9,7 +9,7 @@ use App\Models\Expense;
 
 class DashboardController extends Controller
 {
-    public function index($date = null, $format = 'Y-m-d')
+    public function index(Request $request, $date = null, $format = 'Y-m-d')
     {
         $d = \DateTime::createFromFormat($format, $date);
 
@@ -19,6 +19,7 @@ class DashboardController extends Controller
 
         return Inertia::render('Dashboard/Index', [
             'expenses' => Expense::with(['category', 'Currency', 'PaymentType'])
+                ->where('user_id', $request->user()->id)
                 ->where('transaction_date', '>=', date('Y-m-01', strtotime($date)))
                 ->where('transaction_date', '<', date('Y-m-t', strtotime($date . ' +1 day')))
                 ->orderByDesc('transaction_date')->get(),
