@@ -27,6 +27,7 @@ class Event extends Model
         'is_owed',
         'currency_id',
         'amount',
+        'user_id',
     ];
 
     protected $appends = ['days'];

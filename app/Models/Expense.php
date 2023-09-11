@@ -23,6 +23,7 @@ class Expense extends Model
         'description',
         'due_date',
         'paid_date',
+        'user_id',
     ];
 
     /**

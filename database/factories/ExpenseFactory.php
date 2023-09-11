@@ -21,8 +21,10 @@ class ExpenseFactory extends Factory
     public function definition()
     {
         $date = fake()->dateTimeBetween('-2 months', 'now')->format('Y-m-d');
+        $user = \App\Models\User::all()->random()->first();
 
         return [
+            'user_id' => $user->id,
             'name' => fake()->words(fake()->numberBetween(1, 3), true),
             'description' => fake()->paragraph(fake()->numberBetween(1, 2), false),
             'category_id' => Category::all()->random()->id,

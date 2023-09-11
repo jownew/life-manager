@@ -37,22 +37,24 @@ class ExpenseController extends Controller
      */
     public function store(StoreExpenseRequest $request)
     {
-        $expense = Expense::create(
-            $request->validate([
-                'name' => ['required'],
-                'description' => [],
-                'amount' => ['required'],
-                'transaction_date' => ['required'],
-                'currency_id' => ['required'],
-                'category_id' => ['required'],
-                'payment_type_id' => ['required'],
-            ],
-            [
-                'name.required' => 'Please enter a valid item name.',
-                'amount.required' => 'Please enter a valid amount.',
-                'category_id.required' => 'Please select a category.',
-            ])
-        );
+        $validated = $request->validate([
+            'name' => ['required'],
+            'description' => [],
+            'amount' => ['required'],
+            'transaction_date' => ['required'],
+            'currency_id' => ['required'],
+            'category_id' => ['required'],
+            'payment_type_id' => ['required'],
+        ],
+        [
+            'name.required' => 'Please enter a valid item name.',
+            'amount.required' => 'Please enter a valid amount.',
+            'category_id.required' => 'Please select a category.',
+        ]);
+
+        $validated['user_id'] = $request->user()->id;
+
+        $expense = Expense::create($validated);
 
         return redirect()->back()->with('message', "$expense->name added successfully");
     }
@@ -87,7 +89,7 @@ class ExpenseController extends Controller
     {
         $expense = Expense::findOrFail($id);
 
-        $expense->update($request->validate([
+        $validated = $request->validate([
             'name' => ['required'],
             'description' => [],
             'amount' => ['required'],
@@ -100,7 +102,12 @@ class ExpenseController extends Controller
             'name.required' => 'Please enter a valid item name.',
             'amount.required' => 'Please enter a valid amount.',
             'category_id.required' => 'Please select a category.',
-        ]));
+        ]);
+
+
+        $validated['user_id'] = $request->user()->id;
+
+        $expense->update($validated);
 
         Category::addCategory($expense->id, $request->category);
 
