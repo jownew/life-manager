@@ -134,12 +134,9 @@ const saveForm = () => {
   }
 }
 
-watch(() => props.itemId, () => {
-  fetchData();
-});
-
 watch(() => props.isOpen, () => {
   if (props.isOpen) {
+    fetchData();
     nextTick(() => { focusInput.value.focus() });
   }
 });
