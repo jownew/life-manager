@@ -168,7 +168,7 @@ const fetchData = () => {
 const resetForm = () => {
   form.name = '';
   form.description = '';
-  form.currency_id = '';
+  form.currency_id = props.currencies[0]?.id ?? '';
   form.payment_type_id = '';
   form.amount = null;
   form.transaction_date = moment().format('YYYY-MM-DD');
