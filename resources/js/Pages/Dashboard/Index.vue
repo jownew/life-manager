@@ -10,19 +10,23 @@
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
           <div class="p-5 md:mx-10 w-full md:w-1/2 text-center">
+            <div class="grid grid-cols-3 justify-items-center items-center">
             <Link :href="route('dashboard.index', props.previousMonth)">
             <SecondaryButton class="mr-5">
-              Previous Month
+              <Icon icon="carbon:caret-left" class="w-5 h-5" />
+              {{ moment(props.previousMonth).format("MMM") }}
             </SecondaryButton>
-          </Link>
-          {{ moment(props.date).format("DD MMM YYYY") }}
-          <Link :href="route('dashboard.index', props.nextMonth)">
+            </Link>
+              {{ moment(props.date).format("MMM YYYY") }}
+            <Link :href="route('dashboard.index', props.nextMonth)">
             <SecondaryButton class="ml-5">
-            Next Month
+              {{ moment(props.nextMonth).format("MMM") }}
+              <Icon icon="carbon:caret-right" class="w-5 h-5" />
             </SecondaryButton>
-          </Link>
+            </Link>
           </div>
-          <div class="p-5 md:mx-10 border w-full md:w-1/2">
+          </div>
+          <div class="p-5 md:mx-10 md:mb-10 border w-full md:w-1/2">
             <div class="table w-full">
               <div class="table-header-group">
                 <div class="table-row">
@@ -84,6 +88,7 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 import moment from "moment";
 import { Link } from '@inertiajs/inertia-vue3';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
+import { Icon } from '@iconify/vue';
 
 const props = defineProps({
   categories: Array,
