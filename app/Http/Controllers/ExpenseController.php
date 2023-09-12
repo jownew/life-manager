@@ -7,11 +7,11 @@ use App\Http\Requests\UpdateExpenseRequest;
 use App\Models\Category;
 use App\Models\Currency;
 use App\Models\Expense;
-use App\Models\PaymentType;
 use Inertia\Inertia;
 use App\Exports\ExpensesExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request as FRequest;
 
 class ExpenseController extends Controller
 {
@@ -23,9 +23,13 @@ class ExpenseController extends Controller
     public function index(Request $request)
     {
         return Inertia::render('Expenses/Index', [
+            'filters' => FRequest::all(['search', 'trashed']),
             'items' => Expense::with(['category', 'Currency', 'PaymentType'])
                 ->where('user_id', $request->user()->id)
-                ->orderByDesc('transaction_date')->paginate(),
+                ->orderByDesc('transaction_date')
+                ->filter(FRequest::only(['search', 'trashed']))
+                ->paginate()
+                ->withQueryString(),
             'currencies' => Currency::all(),
             'categories' => Category::all(),
         ]);

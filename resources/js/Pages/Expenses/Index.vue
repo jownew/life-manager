@@ -9,24 +9,36 @@
     <div class="py-2 md:py-12">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-5">
-          <div class="md:text-right text-center mx-2 my-2">
-            <a :href="route('expenses.export')">
-              <SecondaryButton class="mr-2">
-                Export
-              </SecondaryButton>
-            </a>
-            <PrimaryButton @click="editItem()">
-              New Expense
-            </PrimaryButton>
-            <DangerButton class="ml-2" @click="deleteSelectedItems"
-              v-if="data.selectedItems.length > 0">
-              Delete Selected
-            </DangerButton>
+          <div class="grid grid-cols-1 md:grid-cols-2 pb-5 items-center">
+            <SearchFilter v-model="data.form.search"
+              class="mr-4 w-full max-w-md pb-5 md:pb-0"
+              @reset="reset" placeholder="Search Name or Category">
+              <label class="block text-gray-700">Trashed:</label>
+              <select v-model="data.form.trashed" class="form-select mt-1 w-full">
+                <option :value="null" />
+                <option value="with">With Trashed</option>
+                <option value="only">Only Trashed</option>
+              </select>
+            </SearchFilter>
+            <div class="text-center md:text-right">
+              <a :href="route('expenses.export')">
+                <SecondaryButton class="mr-2">
+                  Export
+                </SecondaryButton>
+              </a>
+              <PrimaryButton @click="editItem()">
+                New Expense
+              </PrimaryButton>
+              <DangerButton class="ml-2" @click="deleteSelectedItems"
+                v-if="data.selectedItems.length > 0">
+                Delete Selected
+              </DangerButton>
+            </div>
           </div>
           <div class="md:table w-full">
             <div class="md:table-header-group md:display hidden">
-              <div class="table-row">
-                <div class="table-cell text-center">
+              <div class="table-row bg-slate-100">
+                <div class="table-cell text-center border-b py-2">
                   <input
                     type="checkbox"
                     @click="toggleAll()"
@@ -34,14 +46,15 @@
                   >
                 </div>
                 <div
-                  class="table-cell text-left border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
+                  class="table-cell text-left border-b p-4 pl-8 text-slate-500 dark:text-slate-400">
                 </div>
-                <div class="table-cell text-left">Date</div>
-                <div class="table-cell text-left">Name</div>
-                <div class="table-cell text-center px-5">Currency</div>
-                <div class="table-cell text-right px-5">Amount</div>
-                <div class="table-cell px-5">Category</div>
-                <div class="table-cell px-5">Payment</div>
+                <div class="table-cell text-left border-b">Date</div>
+                <div class="table-cell text-left border-b">Name</div>
+                <div class="table-cell text-center px-5 border-b">Currency</div>
+                <div class="table-cell text-right px-5 border-b">Amount</div>
+                <div class="table-cell px-5 border-b">Category</div>
+                <div class="table-cell px-5 border-b">Payment</div>
+                <div class="table-cell px-5 border-b"></div>
               </div>
             </div>
             <div class="md:table-row-group">
@@ -114,20 +127,29 @@ import SecondaryButton from '@/Components/SecondaryButton.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import DangerButton from '@/Components/DangerButton.vue';
 import { Inertia } from '@inertiajs/inertia';
-import { reactive } from 'vue';
+import { reactive, watch } from 'vue';
 import { Icon } from '@iconify/vue';
 import ExpenseForm from './Partials/ExpenseForm.vue';
+import SearchFilter from '@/Components/SearchFilter.vue';
+import pickBy from 'lodash/pickBy';
+import debounce from 'lodash/debounce';
 
 const props = defineProps({
   items: Object,
   currencies: Array,
   categories: Array,
+  filters: Object,
 });
 
 const data = reactive({
   itemId: '',
   selectedItems: [],
   paymentTypes: [],
+  form: {
+    search: props.filters.search,
+    trashed: props.filters.trashed,
+    allItems: props.filters.allItems,
+  },
 });
 
 const editItem = (id = '') => {
@@ -177,4 +199,16 @@ const toggleAll = () => {
 const clearSelectedItems = () => {
   data.selectedItems = [];
 }
+
+const reset = () => {
+  data.form.search = '';
+}
+
+const getItems = debounce(() => {
+  Inertia.get(route('expenses.index'), pickBy(data.form), { preserveState: true });
+}, 500);
+
+watch(data.form, () => {
+  getItems();
+});
 </script>
