@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateEventRequest;
 use App\Models\Currency;
 use App\Models\Event;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request as FRequest;
 
 class EventController extends Controller
 {
@@ -17,10 +18,12 @@ class EventController extends Controller
     public function index(Request $request)
     {
         return Inertia::render('Events/Index', [
+            'filters' => FRequest::all(['search', 'trashed', 'status']),
             'items' => Event::orderBy('event_date')
-                ->where('status', 'active')
                 ->where('user_id', $request->user()->id)
-                ->paginate(),
+                ->filter(FRequest::only(['search', 'trashed', 'status']))
+                ->paginate()
+                ->withQueryString(),
             'currencies' => Currency::all(),
             'showAll' => false,
         ]);

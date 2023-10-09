@@ -9,32 +9,36 @@
     <div class="py-2 md:py-12">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-5">
-          <div class="md:block hidden float-left">
-              <label class="flex items-center">
-                <Checkbox :checked="props.showAll" @click="getItems()" />
+          <div class="grid grid-cols-1 md:grid-cols-2 pb-5 items-center">
+            <SearchFilter v-model="data.form.search" class="mr-4 w-full max-w-md pb-5 md:pb-0" @reset="reset"
+              placeholder="Search Name or Category">
+              <label class="block text-gray-700">Trashed:</label>
+              <select v-model="data.form.trashed" class="form-select mt-1 w-full">
+                <option :value="null" />
+                <option value="with">With Trashed</option>
+                <option value="only">Only Trashed</option>
+              </select>
+            </SearchFilter>
+            <div class="text-center md:text-right">
+              <label class="pr-5">
+                <Checkbox :checked="data.form.status == 'all'" @click="toggleShowAll()" />
                 <span class="ml-2 text-sm text-gray-600">Show All</span>
               </label>
+              <PrimaryButton class="my-1" @click="editItem()" :class="{ 'opacity-25': itemForm.processing }"
+                :disabled="itemForm.processing">
+                New Event
+              </PrimaryButton>
+              <DangerButton class="ml-2" @click="deleteSelectedItems" :class="{ 'opacity-25': itemForm.processing }"
+                v-if="data.selectedItems.length > 0" :disabled="itemForm.processing">
+                Delete Selected
+              </DangerButton>
             </div>
-          <div class="md:text-right text-center mx-2 my-2">
-            <PrimaryButton class="my-1" @click="editItem()" :class="{ 'opacity-25': itemForm.processing }"
-              :disabled="itemForm.processing">
-              New Event
-            </PrimaryButton>
-            <DangerButton class="ml-2" @click="deleteSelectedItems" :class="{ 'opacity-25': itemForm.processing }"
-              v-if="data.selectedItems.length > 0"
-              :disabled="itemForm.processing">
-              Delete Selected
-            </DangerButton>
           </div>
           <div class="md:table w-full">
             <div class="md:table-header-group md:display hidden">
               <div class="table-row">
                 <div class="table-cell text-center">
-                  <input
-                    type="checkbox"
-                    @click="toggleAll()"
-                    :checked="data.selectedItems.length == items.data.length"
-                  >
+                  <input type="checkbox" @click="toggleAll()" :checked="data.selectedItems.length == items.data.length">
                 </div>
                 <div
                   class="table-cell border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400 text-right">
@@ -60,12 +64,8 @@
               <div v-for="item, i in items.data" :key="item.id"
                 class="md:table-row odd:bg-white even:bg-gray-200 border py-2 my-2">
                 <div class="md:table-cell md:text-center hidden md:visible text-center">
-                  <input
-                    type="checkbox"
-                    class="mx-1"
-                    @click="toggleSelection(item.id)"
-                    :checked="data.selectedItems.includes(item.id)"
-                  >
+                  <input type="checkbox" class="mx-1" @click="toggleSelection(item.id)"
+                    :checked="data.selectedItems.includes(item.id)">
                 </div>
                 <div class="md:table-cell md:text-center hidden md:visible">
                   {{ i + 1 + ((props.items.current_page - 1) * props.items.per_page) }}.
@@ -88,8 +88,9 @@
                 </div>
                 <div class="md:table-cell hidden md:visible text-right">
 
-                  <SecondaryButton class="mx-2 my-1" @click="changeStatus(item.id, 'active')" v-if="item.status == 'completed'"
-                    :class="{ 'opacity-25': itemForm.processing }" :disabled="itemForm.processing">
+                  <SecondaryButton class="mx-2 my-1" @click="changeStatus(item.id, 'active')"
+                    v-if="item.status == 'completed'" :class="{ 'opacity-25': itemForm.processing }"
+                    :disabled="itemForm.processing">
                     <Icon icon="carbon:checkbox-checked" class="w-5 h-5" />
                   </SecondaryButton>
                   <SecondaryButton class="mx-2 my-1" @click="changeStatus(item.id, 'completed')" v-else
@@ -130,15 +131,18 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import DangerButton from '@/Components/DangerButton.vue';
 import { Inertia } from '@inertiajs/inertia';
 import { useForm } from '@inertiajs/inertia-vue3';
-import { reactive } from 'vue';
+import { reactive, watch } from 'vue';
 import EventForm from './Partials/EventForm.vue';
 import Checkbox from '@/Components/Checkbox.vue';
 import { Icon } from '@iconify/vue';
+import SearchFilter from '@/Components/SearchFilter.vue';
+import pickBy from 'lodash/pickBy';
+import debounce from 'lodash/debounce';
 
 const props = defineProps({
   items: Object,
   currencies: Array,
-  showAll: Boolean
+  filters: Object,
 });
 
 const data = reactive({
@@ -146,6 +150,11 @@ const data = reactive({
   isEditModalOpen: false,
   isReadOnly: false,
   selectedItems: [],
+  form: {
+    search: props.filters.search,
+    trashed: props.filters.trashed,
+    status: props.filters.status,
+  },
 });
 
 const itemForm = useForm({
@@ -162,7 +171,7 @@ const editItem = (id = '') => {
 }
 
 const changeStatus = (id, newStatus) => {
-  Inertia.post(route('events.changeStatus', id), {status: newStatus}, {
+  Inertia.post(route('events.changeStatus', id), { status: newStatus }, {
     preserveScroll: true,
     onBefore: () => confirm(`Set this item to ${newStatus}?`)
   });
@@ -176,14 +185,6 @@ const deleteItem = (id) => {
   });
 };
 
-const getItems = () => {
-  if (props.showAll) {
-    Inertia.get(route('events.index'));
-  } else {
-    Inertia.get(route('events.showAll'));
-  }
-}
-
 const closeModal = () => {
   data.isEditModalOpen = false;
   data.isReadOnly = false;
@@ -195,9 +196,9 @@ const toReadOnly = (value) => {
 
 const deleteSelectedItems = () => {
   Inertia.post(route('events.destroyMany'), {
-      items: data.selectedItems,
-      _method: 'DELETE',
-    }, {
+    items: data.selectedItems,
+    _method: 'DELETE',
+  }, {
     preserveScroll: true,
     onBefore: () => confirm('Are you sure you want to delete the selected item(s)?'),
     onSuccess: clearSelectedItems(),
@@ -205,11 +206,11 @@ const deleteSelectedItems = () => {
 };
 
 const toggleSelection = (selectedId) => {
-	if (data.selectedItems.indexOf(selectedId) === -1) {
-		data.selectedItems.push(selectedId);
-	} else {
+  if (data.selectedItems.indexOf(selectedId) === -1) {
+    data.selectedItems.push(selectedId);
+  } else {
     data.selectedItems = data.selectedItems.filter(id => id !== selectedId);
-	}
+  }
 }
 
 const toggleAll = () => {
@@ -223,4 +224,26 @@ const toggleAll = () => {
 const clearSelectedItems = () => {
   data.selectedItems = [];
 }
+
+const reset = () => {
+  data.form.search = '';
+}
+
+const getItems = debounce(() => {
+  Inertia.get(route('events.index'), pickBy(data.form), { preserveState: true });
+}, 500);
+
+const toggleShowAll = () => {
+  if (data.form.status == 'all') {
+    data.form.status = '';
+  } else {
+    data.form.status = 'all';
+  }
+
+  getItems();
+}
+
+watch(data.form, () => {
+  getItems();
+});
 </script>

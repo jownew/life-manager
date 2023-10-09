@@ -60,4 +60,26 @@ class Event extends Model
 
         return $days;
     }
+
+    public function scopeFilter($query, array $filters)
+    {
+        $query
+            ->when($filters['search'] ?? null, function ($query, $search) {
+                $query->where(function ($query) use ($search) {
+                    return $query
+                        ->where('title', 'like', '%'.$search.'%')
+                        ->orWhere('description', 'like', '%'.$search.'%');
+                });
+            })
+            ->when(!isset($filters['status']), function($query, $status) {
+                $query->where('status', 'active');
+            })
+            ->when($filters['trashed'] ?? null, function ($query, $trashed) {
+                if ($trashed === 'with') {
+                    $query->withTrashed();
+                } elseif ($trashed === 'only') {
+                    $query->onlyTrashed();
+                }
+            });
+    }
 }
