@@ -51,11 +51,14 @@ class ExpenseController extends Controller
             'currency_id' => ['required'],
             'category_id' => ['required'],
             'payment_type_id' => ['required'],
+            'payment_to_id' => ['different:payment_type_id'],
         ],
         [
             'name.required' => 'Please enter a valid item name.',
             'amount.required' => 'Please enter a valid amount.',
             'category_id.required' => 'Please select a category.',
+            'payment_type_id.required' => 'Please select a payment source.',
+            'payment_to_id.different' => 'Select a different source or destination.',
         ]);
 
         $validated['user_id'] = $request->user()->id;
@@ -103,11 +106,14 @@ class ExpenseController extends Controller
             'currency_id' => ['required'],
             'category_id' => ['required'],
             'payment_type_id' => ['required'],
+            'payment_type_id.required' => 'Please select a payment source.',
+            'payment_to_id' => ['different:payment_type_id'],
         ],
         [
             'name.required' => 'Please enter a valid item name.',
             'amount.required' => 'Please enter a valid amount.',
             'category_id.required' => 'Please select a category.',
+            'payment_to_id.different' => 'Select a different source or destination.',
         ]);
 
 

@@ -13,17 +13,11 @@ class Expense extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = [
-        'name',
-        'amount',
-        'transaction_date',
-        'currency_id',
-        'category_id',
-        'payment_type_id',
-        'description',
-        'due_date',
-        'paid_date',
-        'user_id',
+    protected $guarded = [
+        'id',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     /**
@@ -32,6 +26,14 @@ class Expense extends Model
     public function paymentType()
     {
         return $this->belongsTo(PaymentType::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function paymentTo()
+    {
+        return $this->belongsTo(PaymentType::class, 'payment_to_id');
     }
 
     /**

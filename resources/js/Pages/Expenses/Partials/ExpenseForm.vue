@@ -47,13 +47,23 @@
           <InputError :message="form.errors.currency_id" class="mt-2" />
         </div>
         <div class="col-span-6 sm:col-span-4">
-          <InputLabel for="payment_type_id" value="Payment Type" />
+          <InputLabel for="payment_type_id" value="Payment From" />
           <select id="payment_type_id" v-model="form.payment_type_id"
             class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
             <option :key="paymentType.id" :value="paymentType.id" v-for="paymentType in data.paymentTypes">{{
               paymentType.name }}</option>
           </select>
           <InputError :message="form.errors.payment_type_id" class="mt-2" />
+        </div>
+        <div class="col-span-6 sm:col-span-4">
+          <InputLabel for="payment_to_id" value="Payment To" />
+          <select id="payment_to_id" v-model="form.payment_to_id"
+            class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
+            <option></option>
+            <option :key="paymentType.id" :value="paymentType.id" v-for="paymentType in data.paymentTypes">{{
+              paymentType.name }}</option>
+          </select>
+          <InputError :message="form.errors.payment_to_id" class="mt-2" />
         </div>
         <div class="col-span-6 sm:col-span-4">
           <InputLabel for="description" value="Notes" />
@@ -114,6 +124,7 @@ const form = useForm({
   description: '',
   currency_id: '',
   payment_type_id: '',
+  payment_to_id: '',
   amount: null,
   transaction_date: null,
   category_id: null,
@@ -159,6 +170,7 @@ const fetchData = () => {
     form.description = response.data.description;
     form.currency_id = response.data.currency_id;
     form.payment_type_id = response.data.payment_type_id;
+    form.payment_to_id = response.data.payment_to_id;
     form.amount = response.data.amount;
     form.transaction_date = response.data.transaction_date;
     form.category_id = response.data.category_id;
@@ -170,6 +182,7 @@ const resetForm = () => {
   form.description = '';
   form.currency_id = props.currencies[0]?.id ?? '';
   form.payment_type_id = '';
+  form.payment_to_id = '';
   form.amount = null;
   form.transaction_date = moment().format('YYYY-MM-DD');
   form.category_id = null;
