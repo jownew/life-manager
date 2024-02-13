@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\DailyTaskController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\PaymentTypeController;
@@ -79,6 +80,15 @@ Route::middleware([
     });
 
     Route::prefix('users')->resource('users', UserController::class);
+
+    Route::name('daily-tasks.')->prefix('daily-tasks')->group(function () {
+        Route::post('/{id}/toggle', [DailyTaskController::class, 'toggle'])->name('toggle');
+        Route::post('/{id}/snooze', [DailyTaskController::class, 'snooze'])->name('snooze');
+        Route::delete('/', [DailyTaskController::class, 'destroyMany'])->name('destroy-many');
+    });
+
+    Route::prefix('daily-tasks')->resource('daily-tasks', DailyTaskController::class);
+
     Route::name('events.')->prefix('events')->group(function () {
         Route::get('/all', [EventController::class, 'showAll'])->name('showAll');
         Route::post('/{id}/change-status', [EventController::class, 'changeStatus'])->name('changeStatus');
