@@ -13,6 +13,13 @@ class DailyTask extends Model
     use HasUuids;
     use SoftDeletes;
 
+    protected $fillable = [
+        'title',
+        'description',
+        'planned_time',
+        'user_id',
+    ];
+
     public function scopeFilter($query, array $filters)
     {
         $query

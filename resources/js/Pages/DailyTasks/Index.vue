@@ -11,7 +11,7 @@
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-5">
           <div class="grid grid-cols-1 md:grid-cols-2 pb-5 items-center">
             <SearchFilter v-model="data.form.search" class="mr-4 w-full max-w-md pb-5 md:pb-0" @reset="reset"
-              placeholder="Search Name or Category">
+              placeholder="Search Task">
               <label class="block text-gray-700">Trashed:</label>
               <select v-model="data.form.trashed" class="form-select mt-1 w-full">
                 <option :value="null" />
@@ -63,10 +63,6 @@
                 </div>
                 <div class="md:table-cell md:text-left text-center">
                   {{ item.title }}
-                  <span class="bg-green-100 text-green-800 px-2.5 py-0.5 rounded-lg text-xs"
-                    v-if="item.is_owed === 0">I</span>
-                  <span class="bg-red-100 text-red-800 px-2.5 py-0.5 rounded-lg text-xs"
-                    v-if="item.is_owed === 1">E</span>
                 </div>
                 <div class="md:table-cell hidden md:visible text-right">
 
@@ -75,6 +71,10 @@
                     <Icon v-if="item.completed_time != null" icon="carbon:checkbox-checked"
                       class="w-5 h-5 text-green-600" />
                     <Icon v-else icon="carbon:checkbox" class="w-5 h-5" />
+                  </SecondaryButton>
+                  <SecondaryButton class="mx-2 my-1" @click="snooze(item.id)"
+                    :class="{ 'opacity-25': itemForm.processing }" :disabled="itemForm.processing">
+                    <Icon icon="carbon:snooze" class="w-5 h-5" />
                   </SecondaryButton>
                   <SecondaryButton class="mx-2 my-1" @click="editItem(item.id)"
                     :class="{ 'opacity-25': itemForm.processing }" :disabled="itemForm.processing">
@@ -96,8 +96,7 @@
         </div>
       </div>
     </div>
-    <DailyTaskForm v-if="false" :isOpen="data.isEditModalOpen" :isReadOnly="data.isReadOnly" :itemId="data.itemId"
-      :currencies="currencies" @close="closeModal" @toReadOnly="toReadOnly" />
+    <DailyTaskForm :isOpen="data.isEditModalOpen" :itemId="data.itemId" @close="closeModal" />
   </AppLayout>
 </template>
 
@@ -149,9 +148,17 @@ const editItem = (id = '') => {
 }
 
 const changeStatus = (id, completedDate = null) => {
+  var status = completedDate == null ? 'done' : 'not yet done';
   Inertia.post(route('daily-tasks.toggle', id), {}, {
     preserveScroll: true,
-    onBefore: () => confirm(`toggle?`)
+    onBefore: () => confirm(`Mark task as ${status}?`)
+  });
+};
+
+const snooze = (id) => {
+  Inertia.post(route('daily-tasks.snooze', id), {}, {
+    preserveScroll: true,
+    onBefore: () => confirm(`Do later?`)
   });
 };
 
@@ -173,7 +180,7 @@ const toReadOnly = (value) => {
 }
 
 const deleteSelectedItems = () => {
-  Inertia.post(route('daily-tasks.destroyMany'), {
+  Inertia.post(route('daily-tasks.destroy-many'), {
     items: data.selectedItems,
     _method: 'DELETE',
   }, {

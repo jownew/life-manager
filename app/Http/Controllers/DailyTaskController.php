@@ -38,7 +38,27 @@ class DailyTaskController extends Controller
      */
     public function store(StoreDailyTaskRequest $request)
     {
-        //
+        $validated = $request->validate(
+            [
+                'title' => ['required'],
+                'description' => [],
+            ],
+            [
+                'title.required' => 'Please enter a valid task.',
+            ]
+        );
+
+        $validated['user_id'] = $request->user()->id;
+        $validated['planned_time'] = now();
+        $dailyTask = DailyTask::create($validated);
+
+        if ($dailyTask->exists()) {
+            $message = "Task '$dailyTask->title' added successfully.";
+        } else {
+            $message = "There was an error in adding the task Task '$dailyTask->title'.";
+        }
+
+        return redirect()->back()->with('message', $message);
     }
 
     /**
@@ -46,7 +66,7 @@ class DailyTaskController extends Controller
      */
     public function show(DailyTask $dailyTask)
     {
-        //
+        return $dailyTask;
     }
 
     /**
@@ -62,7 +82,23 @@ class DailyTaskController extends Controller
      */
     public function update(UpdateDailyTaskRequest $request, DailyTask $dailyTask)
     {
-        //
+        $validated = $request->validate(
+            [
+                'title' => ['required'],
+                'description' => [],
+            ],
+            [
+                'title.required' => 'Please enter a valid task.',
+            ]
+        );
+
+        if ($dailyTask->update($validated)) {
+            $message = "Task '$dailyTask->title' updated successfully.";
+        } else {
+            $message = "There was an error in updating the task Task '$dailyTask->title'.";
+        }
+
+        return redirect()->back()->with('message', $message);
     }
 
     /**
@@ -70,7 +106,13 @@ class DailyTaskController extends Controller
      */
     public function destroy(DailyTask $dailyTask)
     {
-        //
+        if ($dailyTask->delete()) {
+            $message = "Task '$dailyTask->title' deleted successfully.";
+        } else {
+            $message = "There was an error in deleting the task Task '$dailyTask->title'.";
+        }
+
+        return redirect()->back()->with('message', $message);
     }
 
     public function toggle(UpdateDailyTaskRequest $request, string $id)
@@ -92,4 +134,31 @@ class DailyTaskController extends Controller
         return redirect()->back()->with('message', "There was an error updating the status of the event $dailyTask->title.");
     }
 
+    public function snooze(UpdateDailyTaskRequest $request, string $id)
+    {
+        $dailyTask = DailyTask::findOrFail($id);
+
+        $dailyTask->planned_time = date("Y-m-d H:i:s", strtotime("+1 hours"));
+
+        if ($dailyTask->update($request->all())) {
+            return redirect()->back()->with('message', "Task '$dailyTask->title' is set to do later.");
+        }
+
+        return redirect()->back()->with('message', "There was an error updating the status of the event $dailyTask->title.");
+    }
+
+    public function destroyMany()
+    {
+        $data = FRequest::all();
+
+        if (!isset($data['items']) || count($data['items']) == 0) {
+            return redirect()->back()->with('message', 'No items to delete.');
+        }
+
+        if (DailyTask::whereIn('id', $data['items'])->delete()) {
+            return redirect()->back()->with('message', "Selected items deleted successfully");
+        }
+
+        return redirect()->back()->with('message', "There was an error in deleting the selected items");
+    }
 }
