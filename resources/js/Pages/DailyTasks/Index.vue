@@ -1,8 +1,8 @@
 <template>
-  <AppLayout title="Events">
+  <AppLayout title="To Do Tasks">
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        Daily Tasks
+        To Do Tasks
       </h2>
     </template>
 
@@ -45,7 +45,12 @@
                 </div>
                 <div
                   class="table-cell border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400 text-left">
-                  Title</div>
+                  Title
+                </div>
+                <div
+                  class="table-cell border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400 text-left">
+                  Due
+                </div>
                 <div
                   class="table-cell border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400 text-center">
                 </div>
@@ -64,23 +69,25 @@
                 <div class="md:table-cell md:text-left text-center">
                   {{ item.title }}
                 </div>
+                <div class="md:table-cell md:text-left text-center" :title="'Created: ' + formatDate(item.created_at)">
+                  {{ formatDate(item.planned_time) }}
+                </div>
                 <div class="md:table-cell hidden md:visible text-right">
-
-                  <SecondaryButton class="mx-2 my-1" @click="changeStatus(item.id, item.completed_time)"
+                  <SecondaryButton class="mx-1 my-1" @click="changeStatus(item.id, item.completed_time)"
                     :class="{ 'opacity-25': itemForm.processing }" :disabled="itemForm.processing">
                     <Icon v-if="item.completed_time != null" icon="carbon:checkbox-checked"
                       class="w-5 h-5 text-green-600" />
                     <Icon v-else icon="carbon:checkbox" class="w-5 h-5" />
                   </SecondaryButton>
-                  <SecondaryButton class="mx-2 my-1" @click="snooze(item.id)"
+                  <SecondaryButton class="mx-1 my-1" @click="snooze(item.id)"
                     :class="{ 'opacity-25': itemForm.processing }" :disabled="itemForm.processing">
                     <Icon icon="carbon:snooze" class="w-5 h-5" />
                   </SecondaryButton>
-                  <SecondaryButton class="mx-2 my-1" @click="editItem(item.id)"
+                  <SecondaryButton class="mx-1 my-1" @click="editItem(item.id)"
                     :class="{ 'opacity-25': itemForm.processing }" :disabled="itemForm.processing">
                     <Icon icon="carbon:edit" class="w-5 h-5" />
                   </SecondaryButton>
-                  <DangerButton class="mx-2 my-1" @click="deleteItem(item.id)"
+                  <DangerButton class="mx-1 my-1" @click="deleteItem(item.id)"
                     :class="{ 'opacity-25': itemForm.processing }" :disabled="itemForm.processing">
                     <Icon icon="carbon:trash-can" class="w-5 h-5" />
                   </DangerButton>
@@ -231,4 +238,8 @@ const toggleShowAll = () => {
 watch(data.form, () => {
   getItems();
 });
+
+const formatDate = (date) => {
+  return moment(date).format('DD MMM YYYY');
+}
 </script>

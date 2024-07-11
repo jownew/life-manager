@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
                 CurrencySeeder::class,
                 CategorySeeder::class,
                 ExpenseSeeder::class,
+                DailyTaskSeeder::class,
             ]
         );
     }
