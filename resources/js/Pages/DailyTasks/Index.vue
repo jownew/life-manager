@@ -6,9 +6,9 @@
       </h2>
     </template>
 
-    <div class="py-2 md:py-12">
+    <div class="py-1 md:py-12">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-5">
+        <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-2">
           <div class="grid grid-cols-1 md:grid-cols-2 pb-5 items-center">
             <SearchFilter v-model="data.form.search" class="mr-4 w-full max-w-md pb-5 md:pb-0" @reset="reset"
               placeholder="Search Task">
@@ -72,7 +72,7 @@
                 <div class="md:table-cell md:text-left text-center" :title="'Created: ' + formatDate(item.created_at)">
                   {{ formatDate(item.planned_time) }}
                 </div>
-                <div class="md:table-cell hidden md:visible text-right">
+                <div class="text-center md:table-cell md:visible md:text-right">
                   <SecondaryButton class="mx-1 my-1" @click="changeStatus(item.id, item.completed_time)"
                     :class="{ 'opacity-25': itemForm.processing }" :disabled="itemForm.processing">
                     <Icon v-if="item.completed_time != null" icon="carbon:checkbox-checked"
