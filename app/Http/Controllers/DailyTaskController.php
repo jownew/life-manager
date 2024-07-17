@@ -18,7 +18,7 @@ class DailyTaskController extends Controller
         return Inertia::render('DailyTasks/Index', [
             'filters' => FRequest::all(['search', 'trashed', 'status']),
             'items' => DailyTask::orderBy('planned_time')
-                ->where('user_id', FRequest::user()->id)
+                ->userOwned()
                 ->filter(FRequest::only(['search', 'trashed', 'status']))
                 ->paginate()
                 ->withQueryString(),

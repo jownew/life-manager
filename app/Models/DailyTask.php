@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 class DailyTask extends Model
 {
@@ -40,5 +41,10 @@ class DailyTask extends Model
                     $query->onlyTrashed();
                 }
             });
+    }
+
+    public function scopeUserOwned($query)
+    {
+        return $query->where('user_id', Auth::id());
     }
 }
