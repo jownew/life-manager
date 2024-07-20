@@ -3,6 +3,10 @@
 
 Life Manager is a web application specifically developed as a hobby project for my own needs. I chose to use the Laravel framework because I find that it is robust, and it has a lot of support.
 
+## Development
+
+Icons: https://icon-sets.iconify.design/carbon/
+
 ## Contributing
 
 Thank you for considering contributing to my project.
