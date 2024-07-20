@@ -91,7 +91,7 @@ watch(() => props.isOpen, () => {
 
 const fetchData = () => {
   form.clearErrors();
-  form.reset();
+  resetForm();
 
   if (!props.itemId) {
     return;
@@ -103,4 +103,8 @@ const fetchData = () => {
   });
 }
 
+const resetForm = () => {
+  form.title = '';
+  form.description = '';
+}
 </script>
