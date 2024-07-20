@@ -340,7 +340,7 @@ const logout = () => {
         </div>
       </header>
       <div v-if="$page.props.flash.message && $page.props.flash.message_type == 'error'"
-        class="bg-red-100 border border-red-400 text-red-700 px-1 py-3 rounded relative text-center mt-2" role="alert">
+        class="bg-red-100 border border-red-400 text-red-700 px-1 py-1 rounded relative text-center mt-2" role="alert">
         <span class="block sm:inline">{{ $page.props.flash.message }}</span>
         <span class="absolute top-0 bottom-0 right-0 px-3 py-3 hidden">
           <svg class="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg"

@@ -147,6 +147,32 @@ class DailyTaskController extends Controller
         return redirect()->back()->with('message', "There was an error updating the status of the event $dailyTask->title.");
     }
 
+    public function prioritise(UpdateDailyTaskRequest $request, DailyTask $dailyTask)
+    {
+        $earliestDailyTask = DailyTask::orderBy('planned_time')
+            ->userOwned()
+            ->where('completed_time', null)
+            ->where('id', '!=', $dailyTask)
+            ->first();
+
+        if (!$earliestDailyTask) {
+            return redirect()->back()->with([
+                'message_type' => 'error',
+                'message' => "There is only one task."
+            ]);
+        }
+
+        $dailyTask->planned_time = date('Y-m-d H:i:s', strtotime("{$earliestDailyTask->planned_time} - 1 minute"));
+        if ($dailyTask->save()) {
+            return redirect()->back()->with('message', "Successfully prioritised the task: '$dailyTask->title'");
+        }
+
+        return redirect()->back()->with([
+            'message_type' => 'error',
+            'message' => "There was an error prioritising the task: '$dailyTask->title'"
+        ]);
+    }
+
     public function destroyMany()
     {
         $data = FRequest::all();

@@ -84,6 +84,7 @@ Route::middleware([
     Route::name('daily-tasks.')->prefix('daily-tasks')->group(function () {
         Route::post('/{id}/toggle', [DailyTaskController::class, 'toggle'])->name('toggle');
         Route::post('/{id}/snooze', [DailyTaskController::class, 'snooze'])->name('snooze');
+        Route::post('/{dailyTask}/prioritise', [DailyTaskController::class, 'prioritise'])->name('prioritise');
         Route::delete('/', [DailyTaskController::class, 'destroyMany'])->name('destroy-many');
     });
 

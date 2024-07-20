@@ -83,6 +83,10 @@
                     :class="{ 'opacity-25': itemForm.processing }" :disabled="itemForm.processing">
                     <Icon icon="carbon:snooze" class="w-5 h-5" />
                   </SecondaryButton>
+                  <SecondaryButton class="mx-1 my-1" @click="prioritise(item.id, item.title)"
+                    :class="{ 'opacity-25': itemForm.processing }" :disabled="itemForm.processing">
+                    <Icon icon="carbon:upgrade" class="w-5 h-5" />
+                  </SecondaryButton>
                   <SecondaryButton class="mx-1 my-1" @click="editItem(item.id)"
                     :class="{ 'opacity-25': itemForm.processing }" :disabled="itemForm.processing">
                     <Icon icon="carbon:edit" class="w-5 h-5" />
@@ -166,6 +170,13 @@ const snooze = (id) => {
   Inertia.post(route('daily-tasks.snooze', id), {}, {
     preserveScroll: true,
     onBefore: () => confirm(`Do later?`)
+  });
+};
+
+const prioritise = (id, title) => {
+  Inertia.post(route('daily-tasks.prioritise', id), {}, {
+    preserveScroll: true,
+    onBefore: () => confirm(`Prioritise this task? '${title}'`)
   });
 };
 
