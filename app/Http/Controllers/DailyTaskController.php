@@ -152,13 +152,12 @@ class DailyTaskController extends Controller
         $earliestDailyTask = DailyTask::orderBy('planned_time')
             ->userOwned()
             ->where('completed_time', null)
-            ->where('id', '!=', $dailyTask)
             ->first();
 
-        if (!$earliestDailyTask) {
+        if (!$earliestDailyTask || $earliestDailyTask->id == $dailyTask->id) {
             return redirect()->back()->with([
                 'message_type' => 'error',
-                'message' => "There is only one task."
+                'message' => "This task is already at the highest priority."
             ]);
         }
 
