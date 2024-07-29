@@ -59,8 +59,9 @@
             <select id="status" v-model="form.status"
               class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
               :readonly="props.isReadOnly">
-              <option :key="i" :value="statusType" v-for="(statusType, i) in statusTypes">{{
-                statusType.charAt(0).toUpperCase() + statusType.slice(1) }}</option>
+              <option :key="i" :value="statusType" v-for="(statusType, i) in statusTypes">
+                {{ statusType.charAt(0).toUpperCase() + statusType.slice(1) }}
+              </option>
             </select>
           </template>
           <InputError :message="form.errors.status" class="mt-2" />
@@ -106,9 +107,9 @@
           <InputLabel for="currency_id" value="Currency" />
           <select id="currency_id" v-model="form.currency_id"
             class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
-            <option :key="currency.id" :value="currency.id" v-for="currency in props.currencies">{{
-              currency.name
-            }}</option>
+            <option :key="currency.id" :value="currency.id" v-for="currency in props.currencies">
+              {{ currency.name }}
+            </option>
           </select>
         </div>
 
@@ -296,6 +297,7 @@ const resetForm = () => {
   form.is_owed = null;
   form.currency_id = null;
   form.amount = null;
+  form.frequency = 1;
 }
 
 </script>
