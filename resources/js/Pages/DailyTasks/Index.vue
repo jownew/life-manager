@@ -38,7 +38,8 @@
             <div class="md:table-header-group md:display hidden">
               <div class="table-row">
                 <div class="table-cell text-center">
-                  <input type="checkbox" @click="toggleAll()" :checked="data.selectedItems.length == items.data.length">
+                  <input type="checkbox" @click="toggleAll()"
+                    :checked="items.data.length > 0 && data.selectedItems.length == items.data.length">
                 </div>
                 <div
                   class="table-cell border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400 text-right">

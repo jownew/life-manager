@@ -10,9 +10,8 @@
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-5">
           <div class="grid grid-cols-1 md:grid-cols-2 pb-5 items-center">
-            <SearchFilter v-model="data.form.search"
-              class="mr-4 w-full max-w-md pb-5 md:pb-0"
-              @reset="reset" placeholder="Search Name or Category">
+            <SearchFilter v-model="data.form.search" class="mr-4 w-full max-w-md pb-5 md:pb-0" @reset="reset"
+              placeholder="Search Name or Category">
               <label class="block text-gray-700">Trashed:</label>
               <select v-model="data.form.trashed" class="form-select mt-1 w-full">
                 <option :value="null" />
@@ -29,8 +28,7 @@
               <PrimaryButton @click="editItem()">
                 New Expense
               </PrimaryButton>
-              <DangerButton class="ml-2" @click="deleteSelectedItems"
-                v-if="data.selectedItems.length > 0">
+              <DangerButton class="ml-2" @click="deleteSelectedItems" v-if="data.selectedItems.length > 0">
                 Delete Selected
               </DangerButton>
             </div>
@@ -39,14 +37,10 @@
             <div class="md:table-header-group md:display hidden">
               <div class="table-row bg-slate-100">
                 <div class="table-cell text-center border-b py-2">
-                  <input
-                    type="checkbox"
-                    @click="toggleAll()"
-                    :checked="data.selectedItems.length == items.data.length"
-                  >
+                  <input type="checkbox" @click="toggleAll()"
+                    :checked="props.items.data.length > 0 && data.selectedItems.length == props.items.data.length">
                 </div>
-                <div
-                  class="table-cell text-left border-b p-4 pl-8 text-slate-500 dark:text-slate-400">
+                <div class="table-cell text-left border-b p-4 pl-8 text-slate-500 dark:text-slate-400">
                 </div>
                 <div class="table-cell text-left border-b">Date</div>
                 <div class="table-cell text-left border-b">Name</div>
@@ -61,12 +55,8 @@
               <div v-for="item, i in props.items.data" :key="item.id"
                 class="md:table-row odd:bg-white even:bg-gray-200 border py-2 my-2">
                 <div class="md:table-cell md:text-center hidden md:visible text-center">
-                  <input
-                    type="checkbox"
-                    class="mx-1"
-                    @click="toggleSelection(item.id)"
-                    :checked="data.selectedItems.includes(item.id)"
-                  >
+                  <input type="checkbox" class="mx-1" @click="toggleSelection(item.id)"
+                    :checked="data.selectedItems.includes(item.id)">
                 </div>
                 <div class="md:table-cell md:text-center hidden md:visible">
                   {{ i + 1 + ((props.items.current_page - 1) * props.items.per_page) }}.
@@ -114,8 +104,7 @@
         </div>
       </div>
     </div>
-    <ExpenseForm :isOpen="data.isEditModalOpen" :itemId="data.itemId" :currencies="currencies"
-      @close="closeModal" />
+    <ExpenseForm :isOpen="data.isEditModalOpen" :itemId="data.itemId" :currencies="currencies" @close="closeModal" />
   </AppLayout>
 </template>
 
@@ -167,9 +156,9 @@ const deleteItem = (id) => {
 
 const deleteSelectedItems = () => {
   Inertia.post(route('expenses.destroyMany'), {
-      items: data.selectedItems,
-      _method: 'DELETE',
-    }, {
+    items: data.selectedItems,
+    _method: 'DELETE',
+  }, {
     preserveScroll: true,
     onBefore: () => confirm('Are you sure you want to delete the selected item(s)?'),
     onSuccess: clearSelectedItems(),
@@ -177,11 +166,11 @@ const deleteSelectedItems = () => {
 };
 
 const toggleSelection = (selectedId) => {
-	if (data.selectedItems.indexOf(selectedId) === -1) {
-		data.selectedItems.push(selectedId);
-	} else {
+  if (data.selectedItems.indexOf(selectedId) === -1) {
+    data.selectedItems.push(selectedId);
+  } else {
     data.selectedItems = data.selectedItems.filter(id => id !== selectedId);
-	}
+  }
 }
 
 const closeModal = () => {
@@ -205,7 +194,9 @@ const reset = () => {
 }
 
 const getItems = debounce(() => {
-  Inertia.get(route('expenses.index'), pickBy(data.form), { preserveState: true });
+  Inertia.get(route('expenses.index'), pickBy(data.form), {
+    preserveState: true,
+  });
 }, 500);
 
 watch(data.form, () => {
