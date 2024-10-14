@@ -43,7 +43,6 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import InputError from '@/Components/InputError.vue';
 import { nextTick, computed, ref, watch, reactive } from 'vue';
-import moment from "moment";
 
 const emit = defineEmits(['close']);
 
@@ -90,7 +89,6 @@ watch(() => props.isOpen, () => {
 });
 
 const fetchData = () => {
-  form.clearErrors();
   resetForm();
 
   if (!props.itemId) {
@@ -104,6 +102,8 @@ const fetchData = () => {
 }
 
 const resetForm = () => {
+  form.clearErrors();
+  form.reset();
   form.title = '';
   form.description = '';
 }
