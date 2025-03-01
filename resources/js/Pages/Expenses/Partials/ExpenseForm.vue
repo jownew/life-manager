@@ -211,18 +211,12 @@ watch(
   () => props.isOpen,
   () => {
     if (props.isOpen) {
+      data.itemId = props.itemId;
       fetchData();
       nextTick(() => {
         focusInput.value.focus();
       });
     }
-  }
-);
-
-watch(
-  () => props.itemId,
-  () => {
-    data.itemId = props.itemId;
   }
 );
 
