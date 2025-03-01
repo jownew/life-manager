@@ -120,8 +120,14 @@
     </template>
 
     <template #footer>
-      <span> hello </span>
-      <SecondaryButton @click="close"> Nevermind </SecondaryButton>
+      <SecondaryButton
+        @click="clone"
+        v-if="props.itemId != '' && props.itemId == data.itemId"
+      >
+        Clone
+      </SecondaryButton>
+
+      <SecondaryButton class="ml-2" @click="close"> Nevermind </SecondaryButton>
 
       <PrimaryButton
         class="ml-2"
@@ -129,7 +135,7 @@
         :class="{ 'opacity-25': form.processing }"
         :disabled="form.processing"
       >
-        Save
+        {{ saveMode }}
       </PrimaryButton>
     </template>
   </DialogModal>
@@ -156,6 +162,7 @@ const props = defineProps({
 });
 
 const data = reactive({
+  itemId: props.itemId,
   categories: [],
   paymentTypes: [],
 });
@@ -164,7 +171,13 @@ const close = () => {
   emit('close');
 };
 
-const pageMode = computed(() => (props.itemId == '' ? 'Add' : 'Edit'));
+const clone = () => {
+  data.itemId = '';
+  form.transaction_date = moment().format('YYYY-MM-DD');
+};
+
+const pageMode = computed(() => (data.itemId == '' ? 'Add' : 'Edit'));
+const saveMode = computed(() => (data.itemId == '' ? 'Add' : 'Update'));
 
 const form = useForm({
   name: '',
@@ -183,12 +196,12 @@ const saveForm = () => {
     form.currency_id = null;
   }
 
-  if (props.itemId == '') {
+  if (data.itemId == '') {
     form.post(route('expenses.store'), {
       onSuccess: () => close(),
     });
   } else {
-    form.patch(route('expenses.update', props.itemId), {
+    form.patch(route('expenses.update', data.itemId), {
       onSuccess: () => close(),
     });
   }
@@ -206,6 +219,13 @@ watch(
   }
 );
 
+watch(
+  () => props.itemId,
+  () => {
+    data.itemId = props.itemId;
+  }
+);
+
 const fetchData = () => {
   getPaymentTypes();
   getCategories();
@@ -213,11 +233,11 @@ const fetchData = () => {
   form.clearErrors();
   resetForm();
 
-  if (!props.itemId) {
+  if (!data.itemId) {
     return;
   }
 
-  axios.get(route('expenses.show', props.itemId)).then((response) => {
+  axios.get(route('expenses.show', data.itemId)).then((response) => {
     form.name = response.data.name;
     form.description = response.data.description;
     form.currency_id = response.data.currency_id;
