@@ -270,7 +270,13 @@ watch(
   () => form.description,
   (newValue) => {
     if (newValue) {
-      parseExpenseText(newValue);
+      // Try to parse the text with the original function
+      const parsed = parseExpenseText(newValue);
+
+      // If original function didn't match, try the new format
+      if (!parsed) {
+        parseTrustLinkFxFormat(newValue);
+      }
     }
   }
 );
@@ -307,5 +313,53 @@ const parseExpenseText = (text) => {
       console.error('Failed to parse date', e);
     }
   }
+};
+
+// New function for the FX fees format
+const parseTrustLinkFxFormat = (text) => {
+  // Match pattern: "0% FX fees! You've spent [CURRENCY] [AMOUNT] using Trust Link card at [MERCHANT] on [DATE] [TIME][TIMEZONE]"
+  const regex =
+    /0% FX fees! You've spent ([A-Z]{3}) ([0-9.]+) using (.*?) card at (.*?) on (\d{1,2} [A-Za-z]{3} \d{4}) (\d{2}:\d{2})([A-Z]{3})/;
+  const match = text.match(regex);
+
+  if (match) {
+    // Extract matched groups - fix the indices to correctly capture merchant name
+    const [
+      _,
+      currencyCode,
+      amount,
+      card,
+      merchant,
+      dateStr,
+      timeStr,
+      timezone,
+    ] = match;
+
+    // Set the form values
+    form.name = merchant.trim();
+    form.amount = parseFloat(amount);
+
+    // Find and set the currency based on the currency code
+    const currency = props.currencies.find((c) => c.code === currencyCode);
+    if (currency) {
+      form.currency_id = currency.id;
+    }
+
+    // Parse and set the transaction date
+    try {
+      const parsedDate = moment(
+        `${dateStr} ${timeStr}`,
+        'DD MMM YYYY HH:mm'
+      ).format('YYYY-MM-DD');
+      form.transaction_date = parsedDate;
+    } catch (e) {
+      // If date parsing fails, keep the current date
+      console.error('Failed to parse date', e);
+    }
+
+    return true;
+  }
+
+  return false;
 };
 </script>
