@@ -288,8 +288,11 @@ watch(
 
 const parseExpenseText = (text) => {
   // Match pattern: "You've spent [CURRENCY] [AMOUNT] at [MERCHANT] on [DATE] [TIME][TIMEZONE] with [CARD] card"
+  // Sample: "You've spent USD 7.68 at Jumping Joe's on 1 Mar 2025 13:50GMT+08:00 with One Platinum card"
+  // Sample: "You've spent USD 7.68 at Jumping Joe's on 1 Mar 2025 13:50SGT with One Platinum card"
+
   const regex =
-    /You've spent ([A-Z]{3}) ([0-9.]+) at (.*?) on (\d{1,2} [A-Za-z]{3} \d{4}) (\d{2}:\d{2})([A-Z]{3}) with (.*?) card/;
+    /You've spent ([A-Z]{3}) ([0-9.]+) at (.*?) on (\d{1,2} [A-Za-z]{3} \d{4}) (\d{2}:\d{2})([A-Z]{3}(?:[+-]\d{2}:\d{2})?) with (.*?) card/;
   const match = text.match(regex);
 
   if (match) {
