@@ -1,6 +1,9 @@
 <?php
 
+$slugifiedName = Illuminate\Support\Str::slug(env('APP_NAME', 'laravel-backup'), '-');
+
 return [
+
 
     'backup' => [
 
@@ -8,7 +11,7 @@ return [
          * The name of this application. You can use this name to monitor
          * the backups.
          */
-        'name' => Illuminate\Support\Str::of(env('APP_NAME', 'laravel-backup'))->slug('-'),
+        'name' => $slugifiedName,
 
         'source' => [
 
@@ -210,7 +213,7 @@ return [
      */
     'monitor_backups' => [
         [
-            'name' => Illuminate\Support\Str::of(env('APP_NAME', 'laravel-backup'))->slug('-'),
+            'name' => $slugifiedName,
             'disks' => ['local'],
             'health_checks' => [
                 \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumAgeInDays::class => 1,

@@ -14,16 +14,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(
-            [
-                UserSeeder::class,
+        $this->call([
+            UserSeeder::class,
+            PaymentTypeSeeder::class,
+            CurrencySeeder::class,
+            CategorySeeder::class,
+        ]);
+
+        if (config('app.env') !== 'production') {
+            $this->call([
                 EventSeeder::class,
-                PaymentTypeSeeder::class,
-                CurrencySeeder::class,
-                CategorySeeder::class,
                 ExpenseSeeder::class,
                 DailyTaskSeeder::class,
-            ]
-        );
+            ]);
+        }
     }
 }

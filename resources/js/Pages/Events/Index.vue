@@ -209,8 +209,7 @@ import SearchFilter from '@/Components/SearchFilter.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { Icon } from '@iconify/vue';
-import { Inertia } from '@inertiajs/inertia';
-import { useForm } from '@inertiajs/inertia-vue3';
+import { router, useForm } from '@inertiajs/vue3';
 import debounce from 'lodash/debounce';
 import pickBy from 'lodash/pickBy';
 import moment from 'moment';
@@ -249,7 +248,7 @@ const editItem = (id = '') => {
 };
 
 const changeStatus = (id, newStatus) => {
-  Inertia.post(
+  router.post(
     route('events.changeStatus', id),
     { status: newStatus },
     {
@@ -261,7 +260,7 @@ const changeStatus = (id, newStatus) => {
 
 const deleteItem = (id) => {
   clearSelectedItems();
-  Inertia.delete(route('events.destroy', id), {
+  router.delete(route('events.destroy', id), {
     preserveScroll: true,
     onBefore: () => confirm('Are you sure you want to delete this item?'),
   });
@@ -277,7 +276,7 @@ const toReadOnly = (value) => {
 };
 
 const deleteSelectedItems = () => {
-  Inertia.post(
+  router.post(
     route('events.destroyMany'),
     {
       items: data.selectedItems,
@@ -317,7 +316,7 @@ const reset = () => {
 };
 
 const getItems = debounce(() => {
-  Inertia.get(route('events.index'), pickBy(data.form), {
+  router.get(route('events.index'), pickBy(data.form), {
     preserveState: true,
   });
 }, 500);

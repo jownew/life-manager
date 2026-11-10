@@ -10,8 +10,12 @@
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-5">
           <div class="md:text-right text-center mx-2">
-            <PrimaryButton class="my-1" @click="editItem(0)" :class="{ 'opacity-25': itemForm.processing }"
-              :disabled="itemForm.processing">
+            <PrimaryButton
+              class="my-1"
+              @click="editItem(0)"
+              :class="{ 'opacity-25': itemForm.processing }"
+              :disabled="itemForm.processing"
+            >
               New User
             </PrimaryButton>
           </div>
@@ -19,22 +23,29 @@
             <div class="md:table-header-group md:display hidden">
               <div class="table-row">
                 <div
-                  class="table-cell text-left border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
+                  class="table-cell text-left border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400"
+                ></div>
+                <div
+                  class="table-cell text-left border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400"
+                >
+                  Name
                 </div>
                 <div
-                  class="table-cell text-left border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
-                  Name</div>
-                <div
-                  class="table-cell text-center px-5 border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
-                  Email</div>
-                <div
-                  class="table-cell text-center px-5 border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
+                  class="table-cell text-center px-5 border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400"
+                >
+                  Email
                 </div>
+                <div
+                  class="table-cell text-center px-5 border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400"
+                ></div>
               </div>
             </div>
             <div class="md:table-row-group">
-              <div v-for="item, i in items.data" :key="item.id"
-                class="md:table-row odd:bg-white even:bg-gray-200 border py-2 my-2">
+              <div
+                v-for="(item, i) in items.data"
+                :key="item.id"
+                class="md:table-row odd:bg-white even:bg-gray-200 border py-2 my-2"
+              >
                 <div class="md:table-cell md:text-center hidden md:visible">
                   {{ i + 1 }}.
                 </div>
@@ -45,12 +56,20 @@
                   {{ item.email }}
                 </div>
                 <div class="md:table-cell hidden md:visible text-right">
-                  <SecondaryButton class="mx-2 my-1" @click="editItem(item.id)"
-                    :class="{ 'opacity-25': itemForm.processing }" :disabled="itemForm.processing">
+                  <SecondaryButton
+                    class="mx-2 my-1"
+                    @click="editItem(item.id)"
+                    :class="{ 'opacity-25': itemForm.processing }"
+                    :disabled="itemForm.processing"
+                  >
                     <Icon icon="carbon:edit" class="w-5 h-5" />
                   </SecondaryButton>
-                  <DangerButton class="mx-2 my-1" @click="deleteItem(item.id)"
-                    :class="{ 'opacity-25': itemForm.processing }" :disabled="itemForm.processing">
+                  <DangerButton
+                    class="mx-2 my-1"
+                    @click="deleteItem(item.id)"
+                    :class="{ 'opacity-25': itemForm.processing }"
+                    :disabled="itemForm.processing"
+                  >
                     <Icon icon="carbon:trash-can" class="w-5 h-5" />
                   </DangerButton>
                 </div>
@@ -58,7 +77,12 @@
             </div>
           </div>
           <div class="flex justify-center gap-1 text-gray-600 mt-4">
-            <NavLink :key="key" v-for="(link, key) in items.links" :href="link.url" :active="link.active">
+            <NavLink
+              :key="key"
+              v-for="(link, key) in items.links"
+              :href="link.url"
+              :active="link.active"
+            >
               <span v-html="link.label"></span>
             </NavLink>
           </div>
@@ -66,30 +90,40 @@
       </div>
     </div>
     <DialogModal :show="editingItem" @close="editingItem = false">
-      <template #title>
-        {{ editingItemText }} Item
-      </template>
+      <template #title> {{ editingItemText }} Item </template>
 
       <template #content>
         <div class="grid gap-6" @keyup.enter="saveItem">
           <div class="col-span-6 sm:col-span-4">
             <InputLabel for="name" value="Name" />
-            <TextInput id="name" v-model="itemForm.name" type="text" class="mt-1 block w-full" autofocus
-              ref="nameInput" />
+            <TextInput
+              id="name"
+              v-model="itemForm.name"
+              type="text"
+              class="mt-1 block w-full"
+              autofocus
+              ref="nameInput"
+            />
             <InputError :message="itemForm.errors.name" class="mt-2" />
           </div>
           <div class="col-span-6 sm:col-span-4">
             <InputLabel for="email" value="Email" />
             <input
               class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
-              v-model="itemForm.email" type="email" id="email" />
+              v-model="itemForm.email"
+              type="email"
+              id="email"
+            />
             <InputError :message="itemForm.errors.email" class="mt-2" />
           </div>
           <div class="col-span-6 sm:col-span-4">
             <InputLabel for="password" value="Password" />
             <input
               class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
-              v-model="itemForm.password" type="password" id="password" />
+              v-model="itemForm.password"
+              type="password"
+              id="password"
+            />
             <InputError :message="itemForm.errors.password" class="mt-2" />
           </div>
         </div>
@@ -100,8 +134,12 @@
           Nevermind
         </SecondaryButton>
 
-        <PrimaryButton class="ml-2" @click="saveItem" :class="{ 'opacity-25': itemForm.processing }"
-          :disabled="itemForm.processing">
+        <PrimaryButton
+          class="ml-2"
+          @click="saveItem"
+          :class="{ 'opacity-25': itemForm.processing }"
+          :disabled="itemForm.processing"
+        >
           Save
         </PrimaryButton>
       </template>
@@ -110,19 +148,18 @@
 </template>
 
 <script setup>
-import AppLayout from '@/Layouts/AppLayout.vue';
-import NavLink from '@/Components/NavLink.vue';
-import DialogModal from '@/Components/DialogModal.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
 import DangerButton from '@/Components/DangerButton.vue';
-import { Inertia } from '@inertiajs/inertia';
-import { useForm } from '@inertiajs/inertia-vue3';
-import InputLabel from '@/Components/InputLabel.vue';
-import { nextTick, reactive, ref } from 'vue';
+import DialogModal from '@/Components/DialogModal.vue';
 import InputError from '@/Components/InputError.vue';
+import InputLabel from '@/Components/InputLabel.vue';
+import NavLink from '@/Components/NavLink.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import SecondaryButton from '@/Components/SecondaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import AppLayout from '@/Layouts/AppLayout.vue';
 import { Icon } from '@iconify/vue';
+import { router, useForm } from '@inertiajs/vue3';
+import { nextTick, reactive, ref } from 'vue';
 
 const props = defineProps({
   items: Object,
@@ -135,7 +172,7 @@ const itemForm = useForm({
 });
 
 const data = reactive({
-  itemId: 0
+  itemId: 0,
 });
 
 const pageTitle = 'Users';
@@ -154,42 +191,43 @@ const editItem = (id) => {
     getItem(id);
   }
 
-  editingItemText.value = id == 0 ? 'New' : 'Edit'
+  editingItemText.value = id == 0 ? 'New' : 'Edit';
   editingItem.value = true;
-  nextTick(() => { nameInput.value.focus() });
+  nextTick(() => {
+    nameInput.value.focus();
+  });
 };
 
 const resetItem = () => {
-  itemForm.name = "";
-  itemForm.email = "";
-  itemForm.password = "";
-}
+  itemForm.name = '';
+  itemForm.email = '';
+  itemForm.password = '';
+};
 
 const getItem = (id) => {
-  return axios.get(route('users.show', id)).then(response => {
+  return axios.get(route('users.show', id)).then((response) => {
     itemForm.name = response.data.name;
     itemForm.email = response.data.email;
-    itemForm.password = "";
+    itemForm.password = '';
   });
-}
+};
 
 const saveItem = () => {
   if (data.itemId == 0) {
     itemForm.post(route('users.store'), {
-      onSuccess: () => editingItem.value = false,
+      onSuccess: () => (editingItem.value = false),
     });
   } else {
     itemForm.patch(route('users.update', data.itemId), {
-      onSuccess: () => editingItem.value = false,
+      onSuccess: () => (editingItem.value = false),
     });
   }
 };
 
 const deleteItem = (id) => {
-  Inertia.delete(route('users.destroy', id), {
+  router.delete(route('users.destroy', id), {
     preserveScroll: true,
-    onBefore: () => confirm('Are you sure you want to delete this item?')
+    onBefore: () => confirm('Are you sure you want to delete this item?'),
   });
 };
 </script>
-

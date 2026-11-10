@@ -12,17 +12,17 @@
           <div class="p-5 md:mx-10 w-full md:w-1/2 text-center">
             <div class="grid grid-cols-3 justify-items-center items-center">
               <Link :href="route('dashboard.index', props.previousMonth)">
-              <SecondaryButton class="mr-5">
-                <Icon icon="carbon:caret-left" class="w-5 h-5" />
-                {{ moment(props.previousMonth).format("MMM") }}
-              </SecondaryButton>
+                <SecondaryButton class="mr-5">
+                  <Icon icon="carbon:caret-left" class="w-5 h-5" />
+                  {{ moment(props.previousMonth).format('MMM') }}
+                </SecondaryButton>
               </Link>
-              {{ moment(props.date).format("MMM YYYY") }}
+              {{ moment(props.date).format('MMM YYYY') }}
               <Link :href="route('dashboard.index', props.nextMonth)">
-              <SecondaryButton class="ml-5">
-                {{ moment(props.nextMonth).format("MMM") }}
-                <Icon icon="carbon:caret-right" class="w-5 h-5" />
-              </SecondaryButton>
+                <SecondaryButton class="ml-5">
+                  {{ moment(props.nextMonth).format('MMM') }}
+                  <Icon icon="carbon:caret-right" class="w-5 h-5" />
+                </SecondaryButton>
               </Link>
             </div>
           </div>
@@ -31,59 +31,75 @@
               <div class="table-header-group">
                 <div class="table-row">
                   <div
-                    class="table-cell border-b dark:border-slate-600 font-medium p-2 pt-0 pb-3 text-slate-800 dark:text-slate-200 text-left">
-                    Category</div>
+                    class="table-cell border-b dark:border-slate-600 font-medium p-2 pt-0 pb-3 text-slate-800 dark:text-slate-200 text-left"
+                  >
+                    Category
+                  </div>
                   <div
-                    class="table-cell border-b dark:border-slate-600 font-medium p-2 pl-8 pt-0 pb-3 text-slate-800 dark:text-slate-200 text-right">
-                    Budget</div>
+                    class="table-cell border-b dark:border-slate-600 font-medium p-2 pl-8 pt-0 pb-3 text-slate-800 dark:text-slate-200 text-right"
+                  >
+                    Budget
+                  </div>
                   <div
-                    class="table-cell border-b dark:border-slate-600 font-medium p-2 pl-8 pt-0 pb-3 text-slate-800 dark:text-slate-200 text-right">
-                    Amount</div>
+                    class="table-cell border-b dark:border-slate-600 font-medium p-2 pl-8 pt-0 pb-3 text-slate-800 dark:text-slate-200 text-right"
+                  >
+                    Amount
+                  </div>
                 </div>
               </div>
               <div class="table-row-group">
                 <div class="table-row" v-for="category in categories">
                   <div
-                    class="table-cell border-b border-slate-100 dark:border-slate-700 p-2 pl-2 text-slate-800 dark:text-slate-400">
-                    {{ category.name }}</div>
+                    class="table-cell border-b border-slate-100 dark:border-slate-700 p-2 pl-2 text-slate-800 dark:text-slate-400"
+                  >
+                    {{ category.name }}
+                  </div>
                   <div
-                    class="table-cell border-b border-slate-100 dark:border-slate-700 p-2 pl-2 text-slate-800 dark:text-slate-400 text-right">
+                    class="table-cell border-b border-slate-100 dark:border-slate-700 p-2 pl-2 text-slate-800 dark:text-slate-400 text-right"
+                  >
                     {{
                       category.budget.toLocaleString('en-US', {
                         minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
+                        maximumFractionDigits: 2,
                       })
                     }}
                   </div>
                   <div
-                    class="table-cell border-b border-slate-100 dark:border-slate-700 p-2 pl-2 text-slate-800 dark:text-slate-400 text-right">
+                    class="table-cell border-b border-slate-100 dark:border-slate-700 p-2 pl-2 text-slate-800 dark:text-slate-400 text-right"
+                  >
                     {{
-                      subTotals.find(st => st.category == category.name).total.toLocaleString('en-US', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
-                      })
+                      subTotals
+                        .find((st) => st.category == category.name)
+                        .total.toLocaleString('en-US', {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })
                     }}
                   </div>
                 </div>
                 <div class="table-row">
                   <div
-                    class="table-cell border-b border-slate-100 dark:border-slate-700 p-2 pl-2 text-slate-800 dark:text-slate-400 font-bold">
-                    Total</div>
+                    class="table-cell border-b border-slate-100 dark:border-slate-700 p-2 pl-2 text-slate-800 dark:text-slate-400 font-bold"
+                  >
+                    Total
+                  </div>
                   <div
-                    class="table-cell border-b border-slate-100 dark:border-slate-700 p-2 pl-2 text-slate-800 dark:text-slate-400 text-right font-bold">
+                    class="table-cell border-b border-slate-100 dark:border-slate-700 p-2 pl-2 text-slate-800 dark:text-slate-400 text-right font-bold"
+                  >
                     {{
                       budgetTotal.toLocaleString('en-US', {
                         minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
+                        maximumFractionDigits: 2,
                       })
                     }}
                   </div>
                   <div
-                    class="table-cell border-b border-slate-100 dark:border-slate-700 p-2 pl-2 text-slate-800 dark:text-slate-400 text-right font-bold">
+                    class="table-cell border-b border-slate-100 dark:border-slate-700 p-2 pl-2 text-slate-800 dark:text-slate-400 text-right font-bold"
+                  >
                     {{
                       sum.toLocaleString('en-US', {
                         minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
+                        maximumFractionDigits: 2,
                       })
                     }}
                   </div>
@@ -98,11 +114,11 @@
 </template>
 
 <script setup>
-import AppLayout from '@/Layouts/AppLayout.vue';
-import moment from "moment";
-import { Link } from '@inertiajs/inertia-vue3';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
+import AppLayout from '@/Layouts/AppLayout.vue';
 import { Icon } from '@iconify/vue';
+import { Link } from '@inertiajs/vue3';
+import moment from 'moment';
 
 const props = defineProps({
   categories: Array,
@@ -113,26 +129,27 @@ const props = defineProps({
 });
 
 const sum = props.expenses.reduce((accumulator, currentValue) => {
-  return accumulator + (+currentValue.amount);
+  return accumulator + +currentValue.amount;
 }, 0);
 
 const budgetTotal = props.categories.reduce((accumulator, currentValue) => {
-  return accumulator + (+currentValue.budget);
+  return accumulator + +currentValue.budget;
 }, 0);
 
-const output = props.categories.map(category => category.name);
+const output = props.categories.map((category) => category.name);
 
 const subTotal = (category) => {
-  return props.expenses.filter(expense => expense.category?.name == category).reduce((accumulator, currentValue) => {
-    return accumulator + (+currentValue.amount);
-  }, 0);
-}
+  return props.expenses
+    .filter((expense) => expense.category?.name == category)
+    .reduce((accumulator, currentValue) => {
+      return accumulator + +currentValue.amount;
+    }, 0);
+};
 
-const subTotals = output.map(name => {
+const subTotals = output.map((name) => {
   return {
     category: name,
     total: subTotal(name),
-  }
+  };
 });
-
 </script>
