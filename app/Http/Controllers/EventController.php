@@ -160,7 +160,7 @@ class EventController extends Controller
         $event = Event::findOrFail($id);
         if ($event->update($request->all())) {
             return redirect()->back()->with('message', "Event $event->title status updated successfully");
-        };
+        }
 
         return redirect()->back()->with('message', "There was an error updating the status of the event $event->title.");
     }
