@@ -137,7 +137,7 @@
                 <div class="md:table-cell hidden md:visible text-center">
                   {{ item.status }}
                 </div>
-                <div class="md:table-cell hidden md:visible text-right">
+                <div class="md:table-cell text-center md:text-right">
                   <SecondaryButton
                     class="mx-2 my-1"
                     @click="changeStatus(item.id, 'active')"
