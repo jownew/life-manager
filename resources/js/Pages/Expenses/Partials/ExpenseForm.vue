@@ -1,6 +1,6 @@
 <template>
   <DialogModal :show="isOpen" @close="close">
-    <template #title> {{ pageMode }} Expense </template>
+    <template #title> {{ modalTitle }} </template>
     <template #content>
       <div class="grid gap-6" @keyup.enter="saveItem">
         <div class="col-span-6 sm:col-span-4">
@@ -176,7 +176,9 @@ const clone = () => {
   form.transaction_date = moment().format('YYYY-MM-DD');
 };
 
-const pageMode = computed(() => (data.itemId == '' ? 'Add' : 'Edit'));
+const modalTitle = computed(() =>
+  data.itemId == '' ? 'Add Expense' : 'Edit Expense',
+);
 const saveMode = computed(() => (data.itemId == '' ? 'Add' : 'Update'));
 
 const form = useForm({
