@@ -7,7 +7,7 @@
           <InputLabel for="name" value="Name" />
           <input
             id="name"
-            class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
+            class="border-gray-300 focus:border-indigo-300 focus:ring-3 focus:ring-indigo-200/50 rounded-md shadow-xs mt-1 block w-full"
             v-model="form.name"
             type="text"
             autofocus
@@ -18,7 +18,7 @@
         <div class="col-span-6 sm:col-span-4">
           <InputLabel for="amount" value="Amount" />
           <input
-            class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
+            class="border-gray-300 focus:border-indigo-300 focus:ring-3 focus:ring-indigo-200/50 rounded-md shadow-xs mt-1 block w-full"
             v-model="form.amount"
             type="number"
             id="amount"
@@ -30,7 +30,7 @@
           <select
             id="category_id"
             v-model="form.category_id"
-            class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
+            class="border-gray-300 focus:border-indigo-300 focus:ring-3 focus:ring-indigo-200/50 rounded-md shadow-xs mt-1 block w-full"
           >
             <option
               :key="category.id"
@@ -45,7 +45,7 @@
         <div class="col-span-6 sm:col-span-4">
           <InputLabel for="transaction_date" value="Date" />
           <input
-            class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
+            class="border-gray-300 focus:border-indigo-300 focus:ring-3 focus:ring-indigo-200/50 rounded-md shadow-xs mt-1 block w-full"
             v-model="form.transaction_date"
             type="date"
             id="transaction_date"
@@ -57,7 +57,7 @@
           <select
             id="currency_id"
             v-model="form.currency_id"
-            class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
+            class="border-gray-300 focus:border-indigo-300 focus:ring-3 focus:ring-indigo-200/50 rounded-md shadow-xs mt-1 block w-full"
           >
             <option
               :key="currency.id"
@@ -74,7 +74,7 @@
           <select
             id="payment_type_id"
             v-model="form.payment_type_id"
-            class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
+            class="border-gray-300 focus:border-indigo-300 focus:ring-3 focus:ring-indigo-200/50 rounded-md shadow-xs mt-1 block w-full"
           >
             <option
               :key="paymentType.id"
@@ -91,7 +91,7 @@
           <select
             id="payment_to_id"
             v-model="form.payment_to_id"
-            class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
+            class="border-gray-300 focus:border-indigo-300 focus:ring-3 focus:ring-indigo-200/50 rounded-md shadow-xs mt-1 block w-full"
           >
             <option></option>
             <option
@@ -110,7 +110,7 @@
             name="description"
             v-model="form.description"
             id="description"
-            class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
+            class="border-gray-300 focus:border-indigo-300 focus:ring-3 focus:ring-indigo-200/50 rounded-md shadow-xs mt-1 block w-full"
             cols="30"
             rows="5"
           ></textarea>
