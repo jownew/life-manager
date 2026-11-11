@@ -10,14 +10,14 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 class ExpensesExport implements FromCollection, WithHeadings, WithMapping
 {
     /**
-    * @return \Illuminate\Support\Collection
-    */
-    public function collection()
+     * @return \Illuminate\Support\Collection
+     */
+    public function collection(): \Illuminate\Support\Enumerable
     {
         return Expense::with(['currency', 'category', 'paymentType'])->orderBy('paid_date')->get();
     }
 
-    public function headings() : array
+    public function headings(): array
     {
         return [
             'Date',
@@ -29,7 +29,7 @@ class ExpensesExport implements FromCollection, WithHeadings, WithMapping
             'Description',
         ];
     }
-    public function map($expense) : array
+    public function map($expense): array
     {
         return [
             $expense->paid_date ? date('d-M-Y', strtotime($expense->paid_date)) : '-',
