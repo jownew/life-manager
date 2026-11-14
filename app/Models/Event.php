@@ -52,7 +52,7 @@ class Event extends Model
         $datetime1 = new \DateTime();
         $datetime2 = new \DateTime($eventDate);
         $interval = $datetime1->diff($datetime2);
-        $days = $interval->format('%a');
+        $days = (int) $interval->format('%a');
 
         if ($interval->invert) {
             return $days * -1;

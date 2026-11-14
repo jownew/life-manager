@@ -129,7 +129,18 @@
                   >
                 </div>
                 <div class="md:table-cell text-center">
-                  {{ item.days }}
+                  <span :class="{ 'hidden md:inline': item.days === 0 }">{{
+                    item.days
+                  }}</span>
+                  <span class="md:hidden">
+                    {{
+                      item.days < 0
+                        ? ` day${item.days === -1 ? '' : 's'} ago`
+                        : item.days === 0
+                          ? 'today'
+                          : ` day${item.days === 1 ? '' : 's'} from now`
+                    }}
+                  </span>
                 </div>
                 <div class="md:table-cell text-center">
                   {{ moment(item.event_date).format('DD MMM YYYY') }}
