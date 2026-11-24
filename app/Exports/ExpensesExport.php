@@ -14,7 +14,7 @@ class ExpensesExport implements FromCollection, WithHeadings, WithMapping
      */
     public function collection(): \Illuminate\Support\Enumerable
     {
-        return Expense::with(['currency', 'category', 'paymentType'])->orderBy('paid_date')->get();
+        return Expense::with(['currency', 'category', 'paymentType', 'tags'])->orderBy('paid_date')->get();
     }
 
     public function headings(): array
@@ -26,6 +26,7 @@ class ExpensesExport implements FromCollection, WithHeadings, WithMapping
             'Amount',
             'Category',
             'Payment',
+            'Tags',
             'Description',
         ];
     }
@@ -38,6 +39,7 @@ class ExpensesExport implements FromCollection, WithHeadings, WithMapping
             $expense->amount,
             $expense->category?->name,
             $expense->paymentType?->name,
+            $expense->tags->pluck('name')->join(', '),
             $expense->description,
         ];
     }

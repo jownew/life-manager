@@ -105,6 +105,38 @@
           <InputError :message="form.errors.payment_to_id" class="mt-2" />
         </div>
         <div class="col-span-6 sm:col-span-4">
+          <InputLabel for="tag_input" value="Tags" />
+          <div
+            class="border border-gray-300 rounded-md shadow-xs mt-1 p-1 flex flex-wrap gap-1"
+          >
+            <span
+              v-for="tag in form.tags"
+              :key="tag"
+              class="inline-flex items-center bg-indigo-100 text-indigo-800 text-sm rounded-full px-2 py-0.5"
+            >
+              {{ tag }}
+              <button type="button" class="ml-1" @click="removeTag(tag)">
+                &times;
+              </button>
+            </span>
+            <input
+              id="tag_input"
+              v-model="data.tagInput"
+              type="text"
+              list="tag_options"
+              placeholder="Add tag and press Enter"
+              class="flex-1 min-w-[8rem] border-0 focus:ring-0 p-1 text-sm"
+              @keydown.enter.prevent.stop="addTag"
+              @keydown.,.prevent="addTag"
+              @blur="addTag"
+            />
+            <datalist id="tag_options">
+              <option v-for="tag in data.tags" :key="tag" :value="tag" />
+            </datalist>
+          </div>
+          <InputError :message="form.errors.tags" class="mt-2" />
+        </div>
+        <div class="col-span-6 sm:col-span-4">
           <InputLabel for="description" value="Notes" />
           <textarea
             name="description"
@@ -165,7 +197,21 @@ const data = reactive({
   itemId: props.itemId,
   categories: [],
   paymentTypes: [],
+  tags: [],
+  tagInput: '',
 });
+
+const addTag = () => {
+  const name = data.tagInput.trim();
+  data.tagInput = '';
+  if (!name) return;
+  if (form.tags.some((t) => t.toLowerCase() === name.toLowerCase())) return;
+  form.tags.push(name);
+};
+
+const removeTag = (name) => {
+  form.tags = form.tags.filter((t) => t !== name);
+};
 
 const close = () => {
   emit('close');
@@ -190,6 +236,7 @@ const form = useForm({
   amount: null,
   transaction_date: null,
   category_id: null,
+  tags: [],
 });
 
 const saveForm = () => {
@@ -225,6 +272,7 @@ watch(
 const fetchData = () => {
   getPaymentTypes();
   getCategories();
+  getTags();
 
   form.clearErrors();
   resetForm();
@@ -242,6 +290,7 @@ const fetchData = () => {
     form.amount = response.data.amount;
     form.transaction_date = response.data.transaction_date;
     form.category_id = response.data.category_id;
+    form.tags = (response.data.tags ?? []).map((t) => t.name);
   });
 };
 
@@ -254,11 +303,19 @@ const resetForm = () => {
   form.amount = null;
   form.transaction_date = moment().format('YYYY-MM-DD');
   form.category_id = null;
+  form.tags = [];
+  data.tagInput = '';
 };
 
 const getPaymentTypes = () => {
   return axios.get(route('paymentTypes.index')).then((response) => {
     data.paymentTypes = response.data;
+  });
+};
+
+const getTags = () => {
+  return axios.get(route('tags.index')).then((response) => {
+    data.tags = response.data;
   });
 };
 

@@ -10,6 +10,7 @@ use App\Http\Controllers\DailyTaskController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\PaymentTypeController;
+use App\Http\Controllers\TagController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 
@@ -62,6 +63,8 @@ Route::middleware([
         Route::delete('/{id}', [ExpenseController::class, 'destroy'])->name('destroy');
         Route::delete('/', [ExpenseController::class, 'destroyMany'])->name('destroyMany');
     });
+
+    Route::get('/tags', [TagController::class, 'index'])->name('tags.index');
 
     Route::name('currencies.')->prefix('currencies')->group(function () {
         Route::get('/', [CurrencyController::class, 'index'])->name('index');

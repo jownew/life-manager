@@ -24,7 +24,7 @@ class ExpenseController extends Controller
     {
         return Inertia::render('Expenses/Index', [
             'filters' => FRequest::all(['search', 'trashed']),
-            'items' => Expense::with(['category', 'Currency', 'PaymentType'])
+            'items' => Expense::with(['category', 'Currency', 'PaymentType', 'tags'])
                 ->where('user_id', $request->user()->id)
                 ->orderByDesc('transaction_date')
                 ->filter(FRequest::only(['search', 'trashed']))
@@ -52,18 +52,25 @@ class ExpenseController extends Controller
             'category_id' => ['required'],
             'payment_type_id' => ['required'],
             'payment_to_id' => ['different:payment_type_id'],
+            'tags' => ['nullable', 'array'],
+            'tags.*' => ['nullable', 'string', 'max:50'],
         ],
-        [
-            'name.required' => 'Please enter a valid item name.',
-            'amount.required' => 'Please enter a valid amount.',
-            'category_id.required' => 'Please select a category.',
-            'payment_type_id.required' => 'Please select a payment source.',
-            'payment_to_id.different' => 'Select a different source or destination.',
-        ]);
+            [
+                'name.required' => 'Please enter a valid item name.',
+                'amount.required' => 'Please enter a valid amount.',
+                'category_id.required' => 'Please select a category.',
+                'payment_type_id.required' => 'Please select a payment source.',
+                'payment_to_id.different' => 'Select a different source or destination.',
+            ]
+        );
 
         $validated['user_id'] = $request->user()->id;
 
+        $tags = $validated['tags'] ?? [];
+        unset($validated['tags']);
+
         $expense = Expense::create($validated);
+        $expense->syncTagNames($tags, $validated['user_id']);
 
         return redirect()->back()->with('message', "$expense->name added successfully");
     }
@@ -76,7 +83,7 @@ class ExpenseController extends Controller
      */
     public function show(Expense $expense, string $id)
     {
-        $expense = Expense::with('category')->findOrFail($id);
+        $expense = Expense::with(['category', 'tags'])->findOrFail($id);
 
         if (request()->wantsJson()) {
             return $expense;
@@ -108,18 +115,25 @@ class ExpenseController extends Controller
             'payment_type_id' => ['required'],
             'payment_type_id.required' => 'Please select a payment source.',
             'payment_to_id' => ['different:payment_type_id'],
+            'tags' => ['nullable', 'array'],
+            'tags.*' => ['nullable', 'string', 'max:50'],
         ],
-        [
-            'name.required' => 'Please enter a valid item name.',
-            'amount.required' => 'Please enter a valid amount.',
-            'category_id.required' => 'Please select a category.',
-            'payment_to_id.different' => 'Select a different source or destination.',
-        ]);
+            [
+                'name.required' => 'Please enter a valid item name.',
+                'amount.required' => 'Please enter a valid amount.',
+                'category_id.required' => 'Please select a category.',
+                'payment_to_id.different' => 'Select a different source or destination.',
+            ]
+        );
 
 
         $validated['user_id'] = $request->user()->id;
 
+        $tags = $validated['tags'] ?? [];
+        unset($validated['tags']);
+
         $expense->update($validated);
+        $expense->syncTagNames($tags, $validated['user_id']);
 
         Category::addCategory($expense->id, $request->category);
 

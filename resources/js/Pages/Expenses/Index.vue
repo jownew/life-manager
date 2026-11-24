@@ -14,7 +14,7 @@
               v-model="data.form.search"
               class="mr-4 w-full max-w-md pb-5 md:pb-0"
               @reset="reset"
-              placeholder="Search Name or Category"
+              placeholder="Search Name, Category or Tag"
             >
               <label class="block text-gray-700">Trashed:</label>
               <select
@@ -62,6 +62,7 @@
                 <div class="table-cell text-right px-5 border-b">Amount</div>
                 <div class="table-cell px-5 border-b">Category</div>
                 <div class="table-cell px-5 border-b">Payment</div>
+                <div class="table-cell px-5 border-b">Tags</div>
                 <div class="table-cell px-5 border-b"></div>
               </div>
             </div>
@@ -111,6 +112,15 @@
                 </div>
                 <div class="md:table-cell hidden md:visible px-5">
                   {{ item.payment_type.name }}
+                </div>
+                <div class="md:table-cell px-5 text-center md:text-left">
+                  <span
+                    v-for="tag in item.tags"
+                    :key="tag.id"
+                    class="inline-block bg-indigo-100 text-indigo-800 text-xs rounded-full px-2 py-0.5 mr-1"
+                  >
+                    {{ tag.name }}
+                  </span>
                 </div>
                 <div class="md:table-cell text-center md:text-right">
                   <SecondaryButton class="mx-2 my-1" @click="editItem(item.id)">

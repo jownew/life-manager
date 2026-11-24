@@ -49,13 +49,36 @@ class Expense extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class);
+    }
+
+    /**
+     * Replace this expense's tags with the given names, creating missing ones.
+     */
+    public function syncTagNames(array $names, int $userId): void
+    {
+        $ids = collect($names)
+            ->map(fn($name) => trim((string) $name))
+            ->filter()
+            ->unique(fn($name) => mb_strtolower($name))
+            ->map(fn($name) => Tag::firstOrCreate(['user_id' => $userId, 'name' => $name])->id)
+            ->all();
+
+        $this->tags()->sync($ids);
+    }
+
     public function scopeFilter($query, array $filters)
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {
             $query
-                ->where('name', 'like', '%'.$search.'%')
+                ->where('name', 'like', '%' . $search . '%')
                 ->orWhereHas('category', function ($query) use ($search) {
-                    $query->where('name', 'like', '%'.$search.'%');
+                    $query->where('name', 'like', '%' . $search . '%');
+                })
+                ->orWhereHas('tags', function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%');
                 });
         })->when($filters['trashed'] ?? null, function ($query, $trashed) {
             if ($trashed === 'with') {
